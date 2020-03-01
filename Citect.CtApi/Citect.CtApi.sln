@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi", "Citect.CtApi\Citect.CtApi.csproj", "{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Example", "Citect.CtApi.Example\Citect.CtApi.Example.csproj", "{70402AC7-D474-4683-998D-F3F401ADFCB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70402AC7-D474-4683-998D-F3F401ADFCB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70402AC7-D474-4683-998D-F3F401ADFCB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70402AC7-D474-4683-998D-F3F401ADFCB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70402AC7-D474-4683-998D-F3F401ADFCB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
