@@ -40,6 +40,16 @@ namespace Citect.CtApi
         /// <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
         [DllImport("CtApi.dll", EntryPoint = "ctTagRead", SetLastError = true)]
         private static extern bool CtTagRead(IntPtr hCTAPI, string sTag, StringBuilder sValue, int dwLength);
+        
+        /// <summary>
+        /// Writes the given value to the I/O Device variable tag.
+        /// </summary>
+        /// <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+        /// <param name="sTag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+        /// <param name="sValue">The value to write to the tag as a string.</param>
+        /// <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctTagWrite", SetLastError = true)]
+        private static extern bool CtTagWrite(IntPtr hCTAPI, string sTag, string sValue);
 
         /// <summary>
         /// Handle of ctapi connection
@@ -131,7 +141,7 @@ namespace Citect.CtApi
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtClose");
+                _logger?.LogError(error, "CtTagRead");
                 throw error;
             }
             else
@@ -139,6 +149,27 @@ namespace Citect.CtApi
                 _logger?.LogInformation($"Read a tag: tag={tag}, value={value.ToString()}");
                 return value.ToString();
             }
+        }
+
+        /// <summary>
+        /// Writes the given value to the I/O Device variable tag.
+        /// </summary>
+        /// <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+        /// <param name="value">The value to write to the tag as a string.</param>
+        /// <exception cref="Win32Exception"></exception>
+        public void TagWrite(string tag, string value)
+        {
+            _logger?.LogInformation($"Write a tag: tag={tag}, value={value}");
+
+            var result = CtTagWrite(_hCtapi, tag, value);
+            if (result == false)
+            {
+                var error = new Win32Exception(Marshal.GetLastWin32Error());
+                _logger?.LogError(error, "CtTagWrite");
+                throw error;
+            }
+
+            _logger.LogDebug($"Tag is written");
         }
     }
 }

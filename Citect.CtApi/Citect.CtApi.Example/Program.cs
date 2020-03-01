@@ -19,24 +19,24 @@ namespace Citect.CtApi.Example
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
             // Get an instance of the service
-            using (var ctApi = serviceProvider.GetService<CtApi>())
+            var ctApi = serviceProvider.GetService<CtApi>();
+            try
             {
-                try
-                {
-                    ctApi.Open("", "", "");
-                    var tag = ctApi.TagRead("Local_ToolTip");
-                    var tag2 = ctApi.TagRead("Local_IsAutomatic");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
+                ctApi.Open("", "", "");
+                var tooltip = ctApi.TagRead("Local_ToolTip");
+                var isAuto = ctApi.TagRead("Local_IsAutomatic");
+                ctApi.TagWrite("Local_ToolTip", DateTime.Now.ToString());
+                ctApi.TagWrite("Local_IsAutomatic", isAuto == "0" ? "1" : "0");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            finally
+            {
+                ctApi.Close();
             }
         }
-
-
-
-
 
         private static void ConfigureServices(ServiceCollection services)
         {
@@ -47,8 +47,8 @@ namespace Citect.CtApi.Example
             })
             .Configure<LoggerFilterOptions>(options =>
             {
-                options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Information /* min level */);
-                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Information /* min level */);
+                options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Debug /* min level */);
+                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Debug /* min level */);
             })
             .AddTransient<CtApi>(); // Register service from the library
         }
