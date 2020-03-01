@@ -150,18 +150,30 @@ namespace Citect.CtApi
         /// Open the connection
         /// </summary>
         /// <exception cref="Win32Exception"></exception>
-        public void Open()
+        public Task OpenAsync()
         {
-            Open(null, null, null);
+            return Task.Run(() => Open());
+        }
+
+        /// <summary>
+        /// Open the connection
+        /// </summary>
+        /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
+        /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
+        /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+        /// <exception cref="Win32Exception"></exception>
+        public Task OpenAsync(string computer, string user, string password)
+        {
+            return Task.Run(() => Open(computer, user, password));
         }
 
         /// <summary>
         /// Open the connection
         /// </summary>
         /// <exception cref="Win32Exception"></exception>
-        public Task OpenAsync()
+        public void Open()
         {
-            return Task.Run(() => Open());
+            Open(null, null, null);
         }
 
         /// <summary>
@@ -192,18 +204,6 @@ namespace Citect.CtApi
         }
 
         /// <summary>
-        /// Open the connection
-        /// </summary>
-        /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
-        /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
-        /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
-        /// <exception cref="Win32Exception"></exception>
-        public Task OpenAsync(string computer, string user, string password)
-        {
-            return Task.Run(() => Open(computer, user, password));
-        }
-
-        /// <summary>
         /// Closes a connection to the Citect SCADA API.
         /// </summary>
         /// <exception cref="Win32Exception"></exception>
@@ -220,6 +220,16 @@ namespace Citect.CtApi
             }
 
             logger?.LogDebug($"Connection is closed");
+        }
+
+        /// <summary>
+        /// Reads the current value from the given I/O Device variable tag.
+        /// </summary>
+        /// <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+        /// <exception cref="Win32Exception"></exception>
+        public Task<string> TagReadAsync(string tag)
+        {
+            return Task.Run(() => TagRead(tag));
         }
 
         /// <summary>
@@ -252,6 +262,17 @@ namespace Citect.CtApi
         /// <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
         /// <param name="value">The value to write to the tag as a string.</param>
         /// <exception cref="Win32Exception"></exception>
+        public Task TagWriteAsync(string tag, string value)
+        {
+            return Task.Run(() => TagWrite(tag, value));
+        }
+
+        /// <summary>
+        /// Writes the given value to the I/O Device variable tag.
+        /// </summary>
+        /// <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+        /// <param name="value">The value to write to the tag as a string.</param>
+        /// <exception cref="Win32Exception"></exception>
         public void TagWrite(string tag, string value)
         {
             logger?.LogInformation($"Write a tag: tag={tag}, value={value}");
@@ -265,6 +286,17 @@ namespace Citect.CtApi
             }
 
             logger?.LogDebug($"Tag is written");
+        }
+
+        /// <summary>
+        /// Executes a Cicode function.
+        /// </summary>
+        /// <param name="cmd">The command to execute.</param>
+        /// <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+        /// <exception cref="Win32Exception"></exception>
+        public Task<string> CicodeAsync(string cmd, uint win = 0)
+        {
+            return Task.Run(() => Cicode(cmd, win));
         }
 
         /// <summary>
@@ -293,14 +325,15 @@ namespace Citect.CtApi
         }
 
         /// <summary>
-        /// Executes a Cicode function.
+        /// Searches objects in the specified database which satisfies the filter string specified by cluster.
         /// </summary>
-        /// <param name="cmd">The command to execute.</param>
-        /// <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
-        /// <exception cref="Win32Exception"></exception>
-        public Task<string> CicodeAsync(string cmd, uint win = 0)
+        /// <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
+        /// <param name="filter">Filter criteria.</param>
+        /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+        /// <param name="propertiesName">The name of the properties to be retrieved.</param>
+        public Task<IEnumerable<Dictionary<string, string>>> FindAsync(string tableName, string filter, string cluster, params string[] propertiesName)
         {
-            return Task.Run(() => Cicode(cmd, win));
+            return Task.Run(() => Find(tableName, filter, cluster, propertiesName));
         }
 
         /// <summary>
@@ -339,18 +372,6 @@ namespace Citect.CtApi
             logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
 
             return items;
-        }
-
-        /// <summary>
-        /// Searches objects in the specified database which satisfies the filter string specified by cluster.
-        /// </summary>
-        /// <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
-        /// <param name="filter">Filter criteria.</param>
-        /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
-        /// <param name="propertiesName">The name of the properties to be retrieved.</param>
-        public Task<IEnumerable<Dictionary<string, string>>> FindAsync(string tableName, string filter, string cluster, params string[] propertiesName)
-        {
-            return Task.Run(() => Find(tableName, filter, cluster, propertiesName));
         }
 
         /// <summary>
