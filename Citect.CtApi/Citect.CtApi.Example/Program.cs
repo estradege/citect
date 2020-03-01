@@ -30,6 +30,8 @@ namespace Citect.CtApi.Example
 
                 var result = ctApi.Cicode("PageDisplay(Alarm)");
                 Console.WriteLine($"PageDisplay(Alarm) = {result}");
+
+                var alarms = ctApi.Find("Alarm", "TAG=BP12*", "", "TAG", "NAME", "DESC");
             }
             catch (Exception e)
             {
@@ -50,8 +52,8 @@ namespace Citect.CtApi.Example
             })
             .Configure<LoggerFilterOptions>(options =>
             {
-                options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Debug /* min level */);
-                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Debug /* min level */);
+                options.AddFilter<DebugLoggerProvider>(null /* category*/ , LogLevel.Information /* min level */);
+                options.AddFilter<ConsoleLoggerProvider>(null  /* category*/ , LogLevel.Information /* min level */);
             })
             .AddTransient<CtApi>(); // Register service from the library
         }

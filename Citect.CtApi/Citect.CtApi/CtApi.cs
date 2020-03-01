@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -65,6 +66,48 @@ namespace Citect.CtApi
         [DllImport("CtApi.dll", EntryPoint = "ctCicode", SetLastError = true)]
         private static extern uint CtCicode(IntPtr hCTAPI, string sCmd, uint hWin, uint nMode, StringBuilder sResult, int dwLength, IntPtr pctOverlapped);
 
+        /// <summary>
+        /// Searches for the first object in the specified database which satisfies the filter string specified by cluster.
+        /// </summary>
+        /// <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+        /// <param name="szTableName">The table, device, trend, or alarm data to be searched.</param>
+        /// <param name="szFilter">Filter criteria.</param>
+        /// <param name="szCluster">Specifies on which cluster the ctFindFirst function will be performed. If left NULL or empty string then the ctFindFirst will be performed on the active cluster if there is only one.</param>
+        /// <param name="pObjHnd">The pointer to the found object handle. This is used to retrieve the properties.</param>
+        /// <param name="dwFlags">This argument is no longer used, pass in a value of 0 for this argument.</param>
+        /// <returns>If the function succeeds, the return value is a search handle used in a subsequent call to ctFindNext() or ctFindClose(). If the function does not succeed, the return value is NULL. To get extended error information, call GetLastError()</returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctFindFirstEx", SetLastError = true)]
+        private static extern IntPtr CtFindFirstEx(IntPtr hCTAPI, string szTableName, string szFilter, string szCluster, ref IntPtr pObjHnd, int dwFlags);
+
+        /// <summary>
+        /// Retrieves the next object in a search initiated by ctFindFirst().
+        /// </summary>
+        /// <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
+        /// <param name="pObjHnd">The pointer to the found object handle. This is used to retrieve the properties.</param>
+        /// <returns>If the function succeeds, the return value is TRUE (1). If the function does not succeed, the return value is FALSE (0). To get extended error information, call GetLastError()</returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctFindNext", SetLastError = true)]
+        private static extern bool CtFindNext(IntPtr hnd, ref IntPtr pObjHnd);
+
+        /// <summary>
+        /// Closes a search initiated by ctFindFirst().
+        /// </summary>
+        /// <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
+        /// <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctFindClose", SetLastError = true)]
+        private static extern bool CtFindClose(IntPtr hnd);
+
+        /// <summary>
+        /// Retrieves an object property.
+        /// </summary>
+        /// <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
+        /// <param name="szName">The name of the property to be retrieved.</param>
+        /// <param name="pData">The result buffer to store the read data. The data is raw binary data, no data conversion or scaling is performed. If this buffer is not large enough to receive the data, the data will be truncated, and the function will return false.</param>
+        /// <param name="dwBufferLength">Length of result buffer. If the result buffer is not large enough to receive the data, the data will be truncated, and the function will return false.</param>
+        /// <param name="dwResultLength">Length of returned result. You can pass NULL if you want to ignore this parameter.</param>
+        /// <param name="dwType">The desired return type.</param>
+        /// <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctGetProperty", SetLastError = true)]
+        private static extern bool CtGetProperty(IntPtr hnd, string szName, StringBuilder pData, uint dwBufferLength, ref UIntPtr dwResultLength, uint dwType);
 
         /// <summary>
         /// Handle of ctapi connection
@@ -210,7 +253,6 @@ namespace Citect.CtApi
         /// <exception cref="Win32Exception"></exception>
         public string Cicode(string cmd, uint win = 0)
         {
-
             _logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}");
 
             var value = new StringBuilder(25);
@@ -225,6 +267,70 @@ namespace Citect.CtApi
             {
                 _logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}, value={value.ToString()}");
                 return value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Searches objects in the specified database which satisfies the filter string specified by cluster.
+        /// </summary>
+        /// <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
+        /// <param name="filter">Filter criteria.</param>
+        /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+        /// <param name="propertiesName">The name of the properties to be retrieved.</param>
+        public IEnumerable<Dictionary<string, string>> Find(string tableName, string filter, string cluster, params string[] propertiesName)
+        {
+            _logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}");
+
+            var hfindptr = IntPtr.Zero;
+            var hfind = CtFindFirstEx(_hCtapi, tableName, filter, cluster, ref hfindptr, 0);
+            if (hfind == IntPtr.Zero)
+            {
+                var error = new Win32Exception(Marshal.GetLastWin32Error());
+                _logger?.LogError(error, "CtFindFirstEx");
+                throw error;
+            }
+
+            var items = new List<Dictionary<string, string>>();
+            do
+            {
+                var item = new Dictionary<string, string>();
+                foreach (var propertyName in propertiesName)
+                {
+                    item[propertyName] = GetProperty(hfindptr, propertyName);
+                }
+
+                items.Add(item);
+            } while (CtFindNext(hfind, ref hfindptr));            
+            CtFindClose(hfind);
+
+            _logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
+
+            return items;
+        }
+
+        /// <summary>
+        /// Retrieves an object property.
+        /// </summary>
+        /// <param name="hfindptr">Handle to the search, as returned by ctFindFirst().</param>
+        /// <param name="propertyName">The name of the property to be retrieved.</param>
+        /// <returns>The property value.</returns>
+        private string GetProperty(IntPtr hfindptr, string propertyName)
+        {
+            _logger?.LogDebug($"Get a property: propertyName={propertyName}");
+
+            var pData = new StringBuilder(100);
+            var dwResultLength = UIntPtr.Zero;
+            var result = CtGetProperty(hfindptr, propertyName, pData, (uint)pData.Capacity, ref dwResultLength, 129);
+            if (result == false)
+            {
+                var error = new Win32Exception(Marshal.GetLastWin32Error());
+                _logger?.LogError(error, "CtGetProperty");
+                return null;
+            }
+            else
+            {
+                _logger?.LogDebug($"Read a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
+                return pData.ToString();
             }
         }
     }
