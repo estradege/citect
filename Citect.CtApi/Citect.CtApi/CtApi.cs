@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Citect.CtApi
 {
@@ -157,6 +158,15 @@ namespace Citect.CtApi
         /// <summary>
         /// Open the connection
         /// </summary>
+        /// <exception cref="Win32Exception"></exception>
+        public Task OpenAsync()
+        {
+            return Task.Run(() => Open());
+        }
+
+        /// <summary>
+        /// Open the connection
+        /// </summary>
         /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
         /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
         /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
@@ -179,6 +189,18 @@ namespace Citect.CtApi
             }
 
             _logger?.LogDebug($"Connection is opened");
+        }
+
+        /// <summary>
+        /// Open the connection
+        /// </summary>
+        /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
+        /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
+        /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+        /// <exception cref="Win32Exception"></exception>
+        public Task OpenAsync(string computer, string user, string password)
+        {
+            return Task.Run(() => Open(computer, user, password));
         }
 
         /// <summary>

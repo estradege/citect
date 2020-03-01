@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Samples.CiCode
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Samples.Find", "Citect.CtApi.Samples.Find\Citect.CtApi.Samples.Find.csproj", "{C67BC076-4205-4B2F-9ED1-2AE251907975}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Example2", "Citect.CtApi.Example2\Citect.CtApi.Example2.csproj", "{645005A0-AFF2-4EA0-87F4-F977E8D8404F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C67BC076-4205-4B2F-9ED1-2AE251907975}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C67BC076-4205-4B2F-9ED1-2AE251907975}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C67BC076-4205-4B2F-9ED1-2AE251907975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{645005A0-AFF2-4EA0-87F4-F977E8D8404F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645005A0-AFF2-4EA0-87F4-F977E8D8404F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645005A0-AFF2-4EA0-87F4-F977E8D8404F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645005A0-AFF2-4EA0-87F4-F977E8D8404F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
