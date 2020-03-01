@@ -395,7 +395,7 @@ namespace Citect.CtApi
             }
             else
             {
-                logger?.LogDebug($"Read a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
+                logger?.LogDebug($"Get a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
                 return pData.ToString();
             }
         }
