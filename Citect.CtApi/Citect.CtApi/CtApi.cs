@@ -113,12 +113,12 @@ namespace Citect.CtApi
         /// <summary>
         /// Handle of ctapi connection
         /// </summary>
-        private IntPtr _hCtapi = IntPtr.Zero;
+        private IntPtr hCtapi = IntPtr.Zero;
 
         /// <summary>
         /// Looging service
         /// </summary>
-        private readonly ILogger<CtApi> _logger;
+        private readonly ILogger<CtApi> logger;
 
         /// <summary>
         /// Create a new Citect ctapi wrapper
@@ -132,7 +132,7 @@ namespace Citect.CtApi
         /// </summary>
         public CtApi(ILogger<CtApi> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Citect.CtApi
         /// </summary>
         public void Dispose()
         {
-            if (_hCtapi != IntPtr.Zero)
+            if (hCtapi != IntPtr.Zero)
             {
                 Close();
             }
@@ -173,22 +173,22 @@ namespace Citect.CtApi
         /// <exception cref="Win32Exception"></exception>
         public void Open(string computer, string user, string password)
         {
-            if (_hCtapi != IntPtr.Zero)
+            if (hCtapi != IntPtr.Zero)
             {
                 Close();
             }
             
-            _logger?.LogInformation($"Open a new connection: computer={computer}, user={user}");           
-            _hCtapi = CtOpen(computer, user, password, 0);
+            logger?.LogInformation($"Open a new connection: computer={computer}, user={user}");           
+            hCtapi = CtOpen(computer, user, password, 0);
             
-            if (_hCtapi == IntPtr.Zero)
+            if (hCtapi == IntPtr.Zero)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtOpen");
+                logger?.LogError(error, "CtOpen");
                 throw error;
             }
 
-            _logger?.LogDebug($"Connection is opened");
+            logger?.LogDebug($"Connection is opened");
         }
 
         /// <summary>
@@ -209,17 +209,17 @@ namespace Citect.CtApi
         /// <exception cref="Win32Exception"></exception>
         public void Close()
         {
-            _logger?.LogInformation($"Close the connection");
+            logger?.LogInformation($"Close the connection");
 
-            var result = CtClose(_hCtapi);
+            var result = CtClose(hCtapi);
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtClose");
+                logger?.LogError(error, "CtClose");
                 throw error;
             }
 
-            _logger?.LogDebug($"Connection is closed");
+            logger?.LogDebug($"Connection is closed");
         }
 
         /// <summary>
@@ -229,19 +229,19 @@ namespace Citect.CtApi
         /// <exception cref="Win32Exception"></exception>
         public string TagRead(string tag)
         {
-            _logger?.LogInformation($"Read a tag: tag={tag}");
+            logger?.LogInformation($"Read a tag: tag={tag}");
 
             var value = new StringBuilder(25);
-            var result = CtTagRead(_hCtapi, tag, value, value.Capacity);
+            var result = CtTagRead(hCtapi, tag, value, value.Capacity);
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtTagRead");
+                logger?.LogError(error, "CtTagRead");
                 throw error;
             }
             else
             {
-                _logger?.LogInformation($"Read a tag: tag={tag}, value={value.ToString()}");
+                logger?.LogInformation($"Read a tag: tag={tag}, value={value.ToString()}");
                 return value.ToString();
             }
         }
@@ -254,17 +254,17 @@ namespace Citect.CtApi
         /// <exception cref="Win32Exception"></exception>
         public void TagWrite(string tag, string value)
         {
-            _logger?.LogInformation($"Write a tag: tag={tag}, value={value}");
+            logger?.LogInformation($"Write a tag: tag={tag}, value={value}");
 
-            var result = CtTagWrite(_hCtapi, tag, value);
+            var result = CtTagWrite(hCtapi, tag, value);
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtTagWrite");
+                logger?.LogError(error, "CtTagWrite");
                 throw error;
             }
 
-            _logger?.LogDebug($"Tag is written");
+            logger?.LogDebug($"Tag is written");
         }
 
         /// <summary>
@@ -275,19 +275,19 @@ namespace Citect.CtApi
         /// <exception cref="Win32Exception"></exception>
         public string Cicode(string cmd, uint win = 0)
         {
-            _logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}");
+            logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}");
 
             var value = new StringBuilder(25);
-            var result = CtCicode(_hCtapi, cmd, win, 0, value, value.Capacity, IntPtr.Zero);
+            var result = CtCicode(hCtapi, cmd, win, 0, value, value.Capacity, IntPtr.Zero);
             if (result == 0)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtCicode");
+                logger?.LogError(error, "CtCicode");
                 throw error;
             }
             else
             {
-                _logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}, value={value.ToString()}");
+                logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}, value={value.ToString()}");
                 return value.ToString();
             }
         }
@@ -312,14 +312,14 @@ namespace Citect.CtApi
         /// <param name="propertiesName">The name of the properties to be retrieved.</param>
         public IEnumerable<Dictionary<string, string>> Find(string tableName, string filter, string cluster, params string[] propertiesName)
         {
-            _logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}");
+            logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}");
 
             var hfindptr = IntPtr.Zero;
-            var hfind = CtFindFirstEx(_hCtapi, tableName, filter, cluster, ref hfindptr, 0);
+            var hfind = CtFindFirstEx(hCtapi, tableName, filter, cluster, ref hfindptr, 0);
             if (hfind == IntPtr.Zero)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtFindFirstEx");
+                logger?.LogError(error, "CtFindFirstEx");
                 throw error;
             }
 
@@ -336,9 +336,21 @@ namespace Citect.CtApi
             } while (CtFindNext(hfind, ref hfindptr));            
             CtFindClose(hfind);
 
-            _logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
+            logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
 
             return items;
+        }
+
+        /// <summary>
+        /// Searches objects in the specified database which satisfies the filter string specified by cluster.
+        /// </summary>
+        /// <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
+        /// <param name="filter">Filter criteria.</param>
+        /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+        /// <param name="propertiesName">The name of the properties to be retrieved.</param>
+        public Task<IEnumerable<Dictionary<string, string>>> FindAsync(string tableName, string filter, string cluster, params string[] propertiesName)
+        {
+            return Task.Run(() => Find(tableName, filter, cluster, propertiesName));
         }
 
         /// <summary>
@@ -349,7 +361,7 @@ namespace Citect.CtApi
         /// <returns>The property value.</returns>
         private string GetProperty(IntPtr hfindptr, string propertyName)
         {
-            _logger?.LogDebug($"Get a property: propertyName={propertyName}");
+            logger?.LogDebug($"Get a property: propertyName={propertyName}");
 
             var pData = new StringBuilder(100);
             var dwResultLength = UIntPtr.Zero;
@@ -357,12 +369,12 @@ namespace Citect.CtApi
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                _logger?.LogError(error, "CtGetProperty");
+                logger?.LogError(error, "CtGetProperty");
                 return null;
             }
             else
             {
-                _logger?.LogDebug($"Read a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
+                logger?.LogDebug($"Read a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
                 return pData.ToString();
             }
         }

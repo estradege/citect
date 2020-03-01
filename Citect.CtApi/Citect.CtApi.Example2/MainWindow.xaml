@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Citect.CtApi.Example2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="740" Width="1330">
     <Grid>
         <Button x:Name="button" Content="Open Async" HorizontalAlignment="Left" Margin="237,115,0,0" VerticalAlignment="Top" Click="button_Click"/>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="94,115,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="59"/>
-        <TextBox x:Name="tbCtApi" HorizontalAlignment="Left" Margin="237,144,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="420" Height="252"/>
+        <TextBox x:Name="tbCtApi" HorizontalAlignment="Left" Margin="237,144,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="1061" Height="570"/>
         <Button x:Name="button_Copy" Content="Open" HorizontalAlignment="Left" Margin="333,115,0,0" VerticalAlignment="Top" Click="button_Copy_Click"/>
         <Button x:Name="button_Copy1" Content="Login" HorizontalAlignment="Left" Margin="400,115,0,0" VerticalAlignment="Top" Click="button_Copy1_Click"/>
+        <Button x:Name="button_Copy2" Content="Find" HorizontalAlignment="Left" Margin="477,115,0,0" VerticalAlignment="Top" Click="button_Copy2_Click"/>
 
     </Grid>
 </Window>
