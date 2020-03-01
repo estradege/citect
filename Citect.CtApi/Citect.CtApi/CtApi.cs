@@ -293,6 +293,17 @@ namespace Citect.CtApi
         }
 
         /// <summary>
+        /// Executes a Cicode function.
+        /// </summary>
+        /// <param name="cmd">The command to execute.</param>
+        /// <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+        /// <exception cref="Win32Exception"></exception>
+        public Task<string> CicodeAsync(string cmd, uint win = 0)
+        {
+            return Task.Run(() => Cicode(cmd, win));
+        }
+
+        /// <summary>
         /// Searches objects in the specified database which satisfies the filter string specified by cluster.
         /// </summary>
         /// <param name="tableName">The table, device, trend, or alarm data to be searched.</param>

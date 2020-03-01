@@ -11,6 +11,7 @@
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="94,115,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="59"/>
         <TextBox x:Name="tbCtApi" HorizontalAlignment="Left" Margin="237,144,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="420" Height="252"/>
         <Button x:Name="button_Copy" Content="Open" HorizontalAlignment="Left" Margin="333,115,0,0" VerticalAlignment="Top" Click="button_Copy_Click"/>
+        <Button x:Name="button_Copy1" Content="Login" HorizontalAlignment="Left" Margin="400,115,0,0" VerticalAlignment="Top" Click="button_Copy1_Click"/>
 
     </Grid>
 </Window>

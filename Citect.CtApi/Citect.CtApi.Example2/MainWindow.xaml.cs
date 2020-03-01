@@ -55,6 +55,24 @@ namespace Citect.CtApi.Example2
             {
                 tbCtApi.Text = error.Message;
             }
+        }
+
+        private async void button_Copy1_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (var ctapi = new CtApi())
+                {
+                    tbCtApi.Text = "Connexion...";
+                    await ctapi.OpenAsync();
+                    tbCtApi.Text = "Login...";
+                    tbCtApi.Text = await ctapi.CicodeAsync("LoginForm()");
+                }
+            }
+            catch (Exception error)
+            {
+                tbCtApi.Text = error.Message;
+            }
 
         }
     }
