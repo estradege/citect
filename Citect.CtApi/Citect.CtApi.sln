@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi", "Citect.CtApi\Citect.CtApi.csproj", "{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citect.CtApi", "Citect.CtApi\Citect.CtApi.csproj", "{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Example", "Citect.CtApi.Example\Citect.CtApi.Example.csproj", "{70402AC7-D474-4683-998D-F3F401ADFCB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citect.CtApi.Example", "Citect.CtApi.Example\Citect.CtApi.Example.csproj", "{70402AC7-D474-4683-998D-F3F401ADFCB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Samples.ReadWrite", "Citect.CtApi.Samples.ReadWrite\Citect.CtApi.Samples.ReadWrite.csproj", "{0435771D-3BFA-47E9-A846-58651A5818D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citect.CtApi.Samples.ReadWrite", "Citect.CtApi.Samples.ReadWrite\Citect.CtApi.Samples.ReadWrite.csproj", "{0435771D-3BFA-47E9-A846-58651A5818D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,14 +12,6 @@ namespace Citect.CtApi
     public class CtApi : IDisposable
     {
         /// <summary>
-        /// Closes a connection to the Citect SCADA API.
-        /// </summary>
-        /// <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
-        /// <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
-        [DllImport("CtApi.dll", EntryPoint = "ctClose", SetLastError = true)]
-        private static extern bool CtClose(IntPtr hCTAPI);
-
-        /// <summary>
         /// Opens a connection to the Citect SCADA API.
         /// </summary>
         /// <param name="sComputer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name.</param>
@@ -29,6 +21,14 @@ namespace Citect.CtApi
         /// <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. Use GetLastError() to get extended error information.</returns>
         [DllImport("CtApi.dll", EntryPoint = "ctOpen", SetLastError = true)]
         private static extern IntPtr CtOpen(string sComputer, string sUser, string sPassword, uint nMode);
+
+        /// <summary>
+        /// Closes a connection to the Citect SCADA API.
+        /// </summary>
+        /// <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+        /// <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctClose", SetLastError = true)]
+        private static extern bool CtClose(IntPtr hCTAPI);
 
         /// <summary>
         /// Reads the current value from the given I/O Device variable tag.
@@ -50,6 +50,21 @@ namespace Citect.CtApi
         /// <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
         [DllImport("CtApi.dll", EntryPoint = "ctTagWrite", SetLastError = true)]
         private static extern bool CtTagWrite(IntPtr hCTAPI, string sTag, string sValue);
+
+        /// <summary>
+        /// Executes a Cicode function.
+        /// </summary>
+        /// <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+        /// <param name="sCmd">The command to execute.</param>
+        /// <param name="hWin">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+        /// <param name="nMode">The mode of the Cicode call. Set this to 0 (zero).</param>
+        /// <param name="sResult">The buffer to put the result of the function call, which is returned as a string. This may be NULL if you do not require the result of the function.</param>
+        /// <param name="dwLength">The length of the sResult buffer. If the result of the Cicode function is longer than the this number, then the result is not returned and the function call does not succeed, however the Cicode function is still executed. If the sResult is NULL then this length needs to be 0.</param>
+        /// <param name="pctOverlapped">CTOVERLAPPED structure. This structure is used to control the overlapped notification. Set to NULL if you want a synchronous function call.</param>
+        /// <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctCicode", SetLastError = true)]
+        private static extern uint CtCicode(IntPtr hCTAPI, string sCmd, uint hWin, uint nMode, StringBuilder sResult, int dwLength, IntPtr pctOverlapped);
+
 
         /// <summary>
         /// Handle of ctapi connection
@@ -185,6 +200,32 @@ namespace Citect.CtApi
             }
 
             _logger?.LogDebug($"Tag is written");
+        }
+
+        /// <summary>
+        /// Executes a Cicode function.
+        /// </summary>
+        /// <param name="cmd">The command to execute.</param>
+        /// <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+        /// <exception cref="Win32Exception"></exception>
+        public string Cicode(string cmd, uint win = 0)
+        {
+
+            _logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}");
+
+            var value = new StringBuilder(25);
+            var result = CtCicode(_hCtapi, cmd, win, 0, value, value.Capacity, IntPtr.Zero);
+            if (result == 0)
+            {
+                var error = new Win32Exception(Marshal.GetLastWin32Error());
+                _logger?.LogError(error, "CtCicode");
+                throw error;
+            }
+            else
+            {
+                _logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}, value={value.ToString()}");
+                return value.ToString();
+            }
         }
     }
 }

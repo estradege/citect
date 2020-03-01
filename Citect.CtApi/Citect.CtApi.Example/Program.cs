@@ -27,6 +27,9 @@ namespace Citect.CtApi.Example
                 var isAuto = ctApi.TagRead("Local_IsAutomatic");
                 ctApi.TagWrite("Local_ToolTip", DateTime.Now.ToString());
                 ctApi.TagWrite("Local_IsAutomatic", isAuto == "0" ? "1" : "0");
+
+                var result = ctApi.Cicode("PageDisplay(Alarm)");
+                Console.WriteLine($"PageDisplay(Alarm) = {result}");
             }
             catch (Exception e)
             {
