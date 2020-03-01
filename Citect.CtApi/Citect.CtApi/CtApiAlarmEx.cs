@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Citect.CtApi
 {
@@ -19,6 +20,19 @@ namespace Citect.CtApi
         public static string AlarmAckTag(this CtApi ctApi, string tag, string clusterName = "")
         {
             var result = ctApi.Cicode($"AlarmAckTag({tag}, {clusterName})");
+            return result;
+        }
+
+        /// <summary>
+        /// Acknowledge a specified alarm.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="tag">A string that identifies the alarm to acknowledge
+        /// <param name="clusterName">The cluster where the tag resides</param>
+        /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        public static async Task<string> AlarmAckTagAsync(this CtApi ctApi, string tag, string clusterName = "")
+        {
+            var result = await ctApi.CicodeAsync($"AlarmAckTag({tag}, {clusterName})");
             return result;
         }
     }
