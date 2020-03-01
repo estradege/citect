@@ -64,7 +64,14 @@ namespace Citect.CtApi
         /// <summary>
         /// Create a new Citect ctapi wrapper
         /// </summary>
-        public CtApi(ILogger<CtApi> logger = null)
+        public CtApi()
+        {
+        }
+
+        /// <summary>
+        /// Create a new Citect ctapi wrapper
+        /// </summary>
+        public CtApi(ILogger<CtApi> logger)
         {
             _logger = logger;
         }
@@ -83,20 +90,28 @@ namespace Citect.CtApi
         /// <summary>
         /// Open the connection
         /// </summary>
+        /// <exception cref="Win32Exception"></exception>
+        public void Open()
+        {
+            Open(null, null, null);
+        }
+
+        /// <summary>
+        /// Open the connection
+        /// </summary>
         /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
         /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
         /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
-        /// <param name="mode">The mode of the Cicode call. Set this to 0 (zero).</param>
         /// <exception cref="Win32Exception"></exception>
-        public void Open(string computer, string user, string password, uint mode = 0)
+        public void Open(string computer, string user, string password)
         {
             if (_hCtapi != IntPtr.Zero)
             {
                 Close();
             }
             
-            _logger?.LogInformation($"Open a new connection: computer={computer}, user={user}, mode={mode}");           
-            _hCtapi = CtOpen(computer, user, password, mode);
+            _logger?.LogInformation($"Open a new connection: computer={computer}, user={user}");           
+            _hCtapi = CtOpen(computer, user, password, 0);
             
             if (_hCtapi == IntPtr.Zero)
             {
@@ -105,7 +120,7 @@ namespace Citect.CtApi
                 throw error;
             }
 
-            _logger.LogDebug($"Connection is opened");
+            _logger?.LogDebug($"Connection is opened");
         }
 
         /// <summary>
@@ -124,7 +139,7 @@ namespace Citect.CtApi
                 throw error;
             }
 
-            _logger.LogDebug($"Connection is closed");
+            _logger?.LogDebug($"Connection is closed");
         }
 
         /// <summary>
@@ -169,7 +184,7 @@ namespace Citect.CtApi
                 throw error;
             }
 
-            _logger.LogDebug($"Tag is written");
+            _logger?.LogDebug($"Tag is written");
         }
     }
 }

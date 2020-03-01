@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi", "Citect.CtAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Example", "Citect.CtApi.Example\Citect.CtApi.Example.csproj", "{70402AC7-D474-4683-998D-F3F401ADFCB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.Samples.ReadWrite", "Citect.CtApi.Samples.ReadWrite\Citect.CtApi.Samples.ReadWrite.csproj", "{0435771D-3BFA-47E9-A846-58651A5818D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{70402AC7-D474-4683-998D-F3F401ADFCB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70402AC7-D474-4683-998D-F3F401ADFCB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70402AC7-D474-4683-998D-F3F401ADFCB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0435771D-3BFA-47E9-A846-58651A5818D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0435771D-3BFA-47E9-A846-58651A5818D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0435771D-3BFA-47E9-A846-58651A5818D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0435771D-3BFA-47E9-A846-58651A5818D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
