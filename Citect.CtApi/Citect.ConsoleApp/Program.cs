@@ -37,12 +37,12 @@ namespace Citect.ConsoleApp
             // Get an instance of the service
             var ctApi = serviceProvider.GetService<CtApi>();
 
-            using (var db = new AlarmDbConnection("AlarmServer1", @"C:\ProgramData\Schneider Electric\Citect SCADA 2018\User\Factory Controls\Systems.xml"))
-            {
-                var result = db.Query("SELECT * FROM CiAlarmObject");
-                var result2 = db.Query<Alm>("SELECT FullName, Description FROM CiAlarmObject");
-                var result3 = db.Query<Alm>("SELECT * FROM CiAlarmObject");
-            }
+            //using (var db = new AlarmDbConnection("AlarmServer1", @"C:\ProgramData\Schneider Electric\Citect SCADA 2018\User\Factory Controls\Systems.xml"))
+            //{
+            //    var result = db.Query("SELECT * FROM CiAlarmObject");
+            //    var result2 = db.Query<Alm>("SELECT FullName, Description FROM CiAlarmObject");
+            //    var result3 = db.Query<Alm>("SELECT * FROM CiAlarmObject");
+            //}
         }
 
         class Alm
