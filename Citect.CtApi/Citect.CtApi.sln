@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citect.CtApi", "Citect.CtApi\Citect.CtApi.csproj", "{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citect.ConsoleApp", "Citect.ConsoleApp\Citect.ConsoleApp.csproj", "{16BABEE9-97AA-4D36-9325-8B3B69AF5D49}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{16BABEE9-97AA-4D36-9325-8B3B69AF5D49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{16BABEE9-97AA-4D36-9325-8B3B69AF5D49}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{16BABEE9-97AA-4D36-9325-8B3B69AF5D49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{16BABEE9-97AA-4D36-9325-8B3B69AF5D49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
