@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Citect.CtApi
 {
     /// <summary>
-    /// Extension methods for alarms management
+    /// Extension methods wrapping cicode alarm functions
     /// </summary>
     public static class CtApiAlarmEx
     {
@@ -14,7 +14,7 @@ namespace Citect.CtApi
         /// Acknowledge a specified alarm.
         /// </summary>
         /// <param name="ctApi"></param>
-        /// <param name="tag">A string that identifies the alarm to acknowledge
+        /// <param name="tag">A string that identifies the alarm to acknowledge</param>
         /// <param name="clusterName">The cluster where the tag resides</param>
         /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
         public static string AlarmAckTag(this CtApi ctApi, string tag, string clusterName = "")
@@ -27,7 +27,7 @@ namespace Citect.CtApi
         /// Acknowledge a specified alarm.
         /// </summary>
         /// <param name="ctApi"></param>
-        /// <param name="tag">A string that identifies the alarm to acknowledge
+        /// <param name="tag">A string that identifies the alarm to acknowledge</param>
         /// <param name="clusterName">The cluster where the tag resides</param>
         /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
         public static async Task<string> AlarmAckTagAsync(this CtApi ctApi, string tag, string clusterName = "")
@@ -40,7 +40,7 @@ namespace Citect.CtApi
         /// Disables alarms by tag name.
         /// </summary>
         /// <param name="ctApi"></param>
-        /// <param name="tag">A string that identifies the alarm to acknowledge
+        /// <param name="tag">A string that identifies the alarm to disable</param>
         /// <param name="clusterName">The cluster where the tag resides</param>
         /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
         public static string AlarmDisableTag(this CtApi ctApi, string tag, string clusterName = "")
@@ -53,7 +53,7 @@ namespace Citect.CtApi
         /// Disables alarms by tag name.
         /// </summary>
         /// <param name="ctApi"></param>
-        /// <param name="tag">A string that identifies the alarm to acknowledge
+        /// <param name="tag">A string that identifies the alarm to disable</param>
         /// <param name="clusterName">The cluster where the tag resides</param>
         /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
         public static async Task<string> AlarmDisableTagAsync(this CtApi ctApi, string tag, string clusterName = "")
@@ -66,7 +66,7 @@ namespace Citect.CtApi
         /// Enables alarms by tag name.
         /// </summary>
         /// <param name="ctApi"></param>
-        /// <param name="tag">A string that identifies the alarm to acknowledge
+        /// <param name="tag">A string that identifies the alarm to enable</param>
         /// <param name="clusterName">The cluster where the tag resides</param>
         /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
         public static string AlarmEnableTag(this CtApi ctApi, string tag, string clusterName = "")
@@ -79,7 +79,7 @@ namespace Citect.CtApi
         /// Enables alarms by tag name.
         /// </summary>
         /// <param name="ctApi"></param>
-        /// <param name="tag">A string that identifies the alarm to acknowledge
+        /// <param name="tag">A string that identifies the alarm to enable</param>
         /// <param name="clusterName">The cluster where the tag resides</param>
         /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
         public static async Task<string> AlarmEnableTagAsync(this CtApi ctApi, string tag, string clusterName = "")
