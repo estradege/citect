@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Citect.CtApi
+namespace Citect
 {
     /// <summary>
     /// Extension methods wrapping cicode page functions

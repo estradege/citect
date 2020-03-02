@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Citect.CtApi
+namespace Citect
 {
     /// <summary>
     /// Citect ctapi wrapper
