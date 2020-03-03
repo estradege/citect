@@ -12,16 +12,11 @@ namespace Citect.AlarmDriver.ConsoleApp1
             //using (var db = new AlarmDbConnection("AlarmServer1", "127.0.0.1", 5482))
             //{
             //    var result = db.Query("SELECT * FROM CiAlarmObject");
+            //    var result2 = db.QueryAsync("SELECT * FROM CiAlarmObject").Result;
             //}
 
-            var service = new AlarmDbService
-            {
-                Server = "AlarmServer1",
-                Ip = "127.0.0.1",
-                Port = 5482
-            };
-
-            var alarms = service.GetAlarms();
+            var service = new AlarmDbService("AlarmServer1",  "127.0.0.1", 5482);
+            var alarms = service.GetAlarmsAsync().Result;
         }
     }
 }

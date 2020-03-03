@@ -5,6 +5,8 @@ using System.Text;
 using Dapper;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Data;
+using Microsoft.Extensions.Configuration;
 
 namespace Citect.AlarmDriver
 {
@@ -14,49 +16,42 @@ namespace Citect.AlarmDriver
     public class AlarmDbService
     {
         /// <summary>
-        /// Citect alarm server name
-        /// </summary>
-        public string Server { get; set; }
-
-        /// <summary>
-        /// Citect alarm server ip address
-        /// </summary>
-        public string Ip { get; set; }
-
-        /// <summary>
-        /// Citect alarm server port
-        /// </summary>
-        public int Port { get; set; }
-
-        /// <summary>
-        /// Looging service
+        /// Logging service
         /// </summary>
         private readonly ILogger<AlarmDbService> logger;
 
         /// <summary>
+        /// Database connectioon
+        /// </summary>
+        private readonly AlarmDbConnection db;
+
+        /// <summary>
         /// Create a new Citect alarm database service
         /// </summary>
-        public AlarmDbService()
+        public AlarmDbService(string server, string ip, int port, ILogger<AlarmDbService> logger = null)
         {
+            db = new AlarmDbConnection(server, ip, port);
         }
 
         /// <summary>
         /// Create a new Citect alarm database service
         /// </summary>
-        public AlarmDbService(ILogger<AlarmDbService> logger)
+        public AlarmDbService(IConfiguration config, ILogger<AlarmDbService> logger)
         {
             this.logger = logger;
+            var server = config["AlarmDbConnection:Server"];
+            var ip = config["AlarmDbConnection:Ip"];
+            var port = config["AlarmDbConnection:Port"];
+            db = new AlarmDbConnection(server, ip, Convert.ToInt32(port));
         }
 
         /// <summary>
         /// Get all alarm objects
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Alarm> GetAlarms()
+        public async Task<IEnumerable<Alarm>> GetAlarmsAsync()
         {
-            using (var db = new AlarmDbConnection(Server, Ip, Port))
-            {
-                var sql = @"select 
+            var sql = @"select 
 Id,
 AlarmSource as ""Tag"",
 DisplayName as ""Name"",
@@ -79,12 +74,11 @@ AlarmLastUpdateTime as ""UpdateTime"",
 ConfigTime
 from CiAlarmObject";
 
-                logger.LogInformation($"GetAlarms: sql={sql}");
-                var alarms = db.Query<Alarm>(sql);
-                logger.LogDebug($"GetAlarms: alarms.Count={alarms.Count()}");
+            logger?.LogInformation($"GetAlarms: sql={sql}");
+            var alarms = await db.QueryAsync<Alarm>(sql);
+            logger?.LogDebug($"GetAlarms: alarms.Count={alarms.Count()}");
 
-                return alarms;
-            }
+            return alarms;
         }
     }
 }

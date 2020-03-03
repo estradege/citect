@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.Odbc;
 using System.IO;
 using System.Text;
@@ -9,21 +10,23 @@ namespace Citect.AlarmDriver
     /// <summary>
     /// Citect alarm database connection using the ODBC Citect Alarm Driver
     /// </summary>
-    public class AlarmDbConnection : IDbConnection
+    public class AlarmDbConnection : DbConnection, IDbConnection
     {
-        public string ConnectionString { get => connection.ConnectionString; set => connection.ConnectionString = value; }
-
-        public int ConnectionTimeout => connection.ConnectionTimeout;
-
-        public string Database => connection.Database;
-
-        public ConnectionState State => connection.State;
-
         /// <summary>
         /// Database connection
         /// </summary>
-        private readonly IDbConnection connection;
-        
+        private readonly DbConnection connection;
+
+        public override string ConnectionString { get => connection.ConnectionString; set => connection.ConnectionString = value; }
+
+        public override string Database => connection.Database;
+
+        public override string DataSource => connection.DataSource;
+
+        public override string ServerVersion => connection.ServerVersion;
+
+        public override ConnectionState State => connection.State;
+
         /// <summary>
         /// Create a new Citect alarm database connection
         /// </summary>
@@ -49,39 +52,29 @@ namespace Citect.AlarmDriver
             connection = new OdbcConnection($"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={systemsXml};");
         }
 
-        public IDbTransaction BeginTransaction()
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
         {
-            return connection.BeginTransaction();
+            return connection.BeginTransaction(isolationLevel);
         }
 
-        public IDbTransaction BeginTransaction(IsolationLevel il)
-        {
-            return connection.BeginTransaction(il);
-        }
-
-        public void ChangeDatabase(string databaseName)
+        public override void ChangeDatabase(string databaseName)
         {
             connection.ChangeDatabase(databaseName);
         }
 
-        public void Close()
+        public override void Close()
         {
             connection.Close();
         }
 
-        public IDbCommand CreateCommand()
+        protected override DbCommand CreateDbCommand()
         {
             return connection.CreateCommand();
         }
 
-        public void Open()
+        public override void Open()
         {
             connection.Open();
-        }
-
-        public void Dispose()
-        {
-            connection.Dispose();
         }
     }
 }
