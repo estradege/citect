@@ -1,12 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Dapper;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Dapper;
-using System.Threading.Tasks;
 using System.Linq;
-using System.Data;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace Citect.AlarmDriver
 {

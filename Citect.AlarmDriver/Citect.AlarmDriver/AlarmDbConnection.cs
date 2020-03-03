@@ -10,7 +10,7 @@ namespace Citect.AlarmDriver
     /// <summary>
     /// Citect alarm database connection using the ODBC Citect Alarm Driver
     /// </summary>
-    public class AlarmDbConnection : DbConnection, IDbConnection
+    public class AlarmDbConnection : DbConnection
     {
         /// <summary>
         /// Database connection
