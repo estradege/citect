@@ -4,7 +4,7 @@ using System.Data.Odbc;
 using System.IO;
 using System.Text;
 
-namespace Citect
+namespace Citect.AlarmDriver
 {
     /// <summary>
     /// Citect alarm database connection using the ODBC Citect Alarm Driver

@@ -9,15 +9,19 @@ namespace Citect.AlarmDriver.ConsoleApp1
         {
             Console.WriteLine("Hello Citect!");
 
-            using (var db = new AlarmDbConnection("AlarmServer1", @"C:\ProgramData\Schneider Electric\Citect SCADA 2018\User\Factory Controls\Systems.xml"))
-            {
-                var result = db.Query("SELECT * FROM CiAlarmObject");
-            }
+            //using (var db = new AlarmDbConnection("AlarmServer1", "127.0.0.1", 5482))
+            //{
+            //    var result = db.Query("SELECT * FROM CiAlarmObject");
+            //}
 
-            using (var db = new AlarmDbConnection("AlarmServer1", "127.0.0.1", 5482))
+            var service = new AlarmDbService
             {
-                var result = db.Query("SELECT * FROM CiAlarmObject");
-            }
+                Server = "AlarmServer1",
+                Ip = "127.0.0.1",
+                Port = 5482
+            };
+
+            var alarms = service.GetAlarms();
         }
     }
 }
