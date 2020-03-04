@@ -68,13 +68,44 @@ CustomFilters[7] as ""Custom8"",
 Historian,
 Equipment as ""Equip"",
 Name as ""Item"",
+AlarmState as ""State"",
+AckTime,
+OnTime,
+OffTime,
+DisableTime,
 AlarmLastUpdateTime as ""UpdateTime"",
 ConfigTime
 from CiAlarmObject";
 
-            logger?.LogInformation($"GetAlarms: sql={sql}");
+            logger?.LogInformation($"GetAlarmsAsync: sql={sql}");
             var alarms = await db.QueryAsync<Alarm>(sql);
-            logger?.LogDebug($"GetAlarms: alarms.Count={alarms.Count()}");
+            logger?.LogDebug($"GetAlarmsAsync: alarms.Count={alarms.Count()}");
+
+            return alarms;
+        }
+
+        /// <summary>
+        /// Get last change alarm state objects
+        /// </summary>
+        /// <param name="wimdow">Time window in seconds</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<AlarmState>> GetLastAlarmsAsync(uint wimdow = 5)
+        {
+            var ts = DateTime.UtcNow.AddSeconds(-1 * wimdow).ToString("yyyy-MM-dd HH:mm:ss");
+            var sql = $@"select 
+Id,
+AlarmSource as ""Tag"",
+AlarmState as ""State"",
+AckTime,
+OnTime,
+OffTime,
+DisableTime
+from CiAlarmObject
+where AlarmLastUpdateTime>={{ts '{ts}'}} or ConfigTime>={{ts '{ts}'}}";
+
+            logger?.LogInformation($"GetLastAlarmsAsync: sql={sql}");
+            var alarms = await db.QueryAsync<AlarmState>(sql);
+            logger?.LogDebug($"GetLastAlarmsAsync: alarms.Count={alarms.Count()}");
 
             return alarms;
         }

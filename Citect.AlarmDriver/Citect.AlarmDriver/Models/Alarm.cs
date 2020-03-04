@@ -98,13 +98,45 @@ namespace Citect.AlarmDriver
         public string Item { get; set; }
 
         /// <summary>
-        /// The timestamp of the last alarm update
+        /// The state of the alarm.
         /// </summary>
-        public DateTime UpdateTime { get; set; }
-        
+        public int State { get; set; }
+
         /// <summary>
-        /// The timestamp of the last alarm config update
+        /// The timestamp of the last acknowledgement.
         /// </summary>
-        public DateTime ConfigTime { get; set; }
+        public DateTime AckTime { get => ackTime; set => ackTime = DateTime.SpecifyKind(value, DateTimeKind.Utc); }
+
+        /// <summary>
+        /// The timestamp of the last Off to On transition.
+        /// </summary>
+        public DateTime OnTime { get => onTime; set => onTime = DateTime.SpecifyKind(value, DateTimeKind.Utc); }
+
+        /// <summary>
+        /// The timestamp of the last On to Off transition.
+        /// </summary>
+        public DateTime OffTime { get => offTime; set => offTime = DateTime.SpecifyKind(value, DateTimeKind.Utc); }
+
+        /// <summary>
+        /// The timestamp of the last Enabled to Disabled transition.
+        /// </summary>
+        public DateTime DisableTime { get => disableTime; set => disableTime = DateTime.SpecifyKind(value, DateTimeKind.Utc); }
+
+        /// <summary>
+        /// The timestamp of the last alarm update.
+        /// </summary>
+        public DateTime UpdateTime { get => updateTime; set => updateTime = DateTime.SpecifyKind(value, DateTimeKind.Utc); }
+
+        /// <summary>
+        /// The timestamp of the last alarm config update.
+        /// </summary>
+        public DateTime ConfigTime { get => configTime; set => configTime = DateTime.SpecifyKind(value, DateTimeKind.Utc); }
+
+        private DateTime ackTime;
+        private DateTime onTime;
+        private DateTime offTime;
+        private DateTime disableTime;
+        private DateTime updateTime;
+        private DateTime configTime;
     }
 }
