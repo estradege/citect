@@ -5,9 +5,9 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/estradege/citect</PackageProjectUrl>
-    <Authors>Citect.CtApi Community</Authors>
+    <Authors>Geoffrey Estrade</Authors>
     <Description>Citect CtApi .net wrapper</Description>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
