@@ -136,6 +136,17 @@ namespace Citect
         }
 
         /// <summary>
+        /// Create a new Citect ctapi wrapper
+        /// </summary>
+        public CtApi(bool open, string computer = "", string user = "", string password = "")
+        {
+            if (open)
+            {
+                Open(computer, user, password);
+            }
+        }
+
+        /// <summary>
         /// Dispose the Citect ctapi wrapper and close the connection
         /// </summary>
         public void Dispose()

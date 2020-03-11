@@ -8,9 +8,8 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            using (var ctApi = new CtApi())
+            using (var ctApi = new CtApi(true))
             {
-                ctApi.Open();
                 var trends = ctApi.TrnQuery(
                     starttime: DateTime.Now.AddHours(-1),
                     endtime: DateTime.Now,
