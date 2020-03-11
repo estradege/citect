@@ -40,6 +40,30 @@ namespace Citect
         /// Search trend data.
         /// </summary>
         /// <param name="ctApi"></param>
+        /// <param name="endtime">End time of the trend query in seconds since 1970 as an integer. This time is expected to be a UTC time (Universal Time Coordinates).</param>
+        /// <param name="endtimeMs">Millisecond portion of the end time as an integer, expected to be a number between 0 and 999.</param>
+        /// <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+        /// <param name="numSamples">Number of samples requested as an integer. The start time of the request is calculated by multiplying the Period by NumSamples - 1, then subtracting this from the EndTime. The actual maximum amount of samples returned is actually NumSamples + 2. This is because we return the previous and next samples before and after the requested range.This is useful as it tells you where the next data is before and after where you requested it.</param>
+        /// <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+        /// <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="DisplayMode"/> to calculate this value.</param>
+        /// <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+        /// <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+        /// <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+        /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<TrnData>> TrnQueryAsync(this CtApi ctApi, long endtime, int endtimeMs, float period, int numSamples, string tagName, uint displayMode, int dataMode, int instantTrend, int samplePeriod, string cluster)
+        {
+            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            var query = $"TRNQUERY,{endtime},{endtimeMs},{period.ToString(format)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var result = await ctApi.FindAsync(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
+
+            return ToTrnData(result);
+        }
+
+        /// <summary>
+        /// Search trend data.
+        /// </summary>
+        /// <param name="ctApi"></param>
         /// <param name="endtime">End time of the trend query.</param>
         /// <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
         /// <param name="numSamples">Number of samples requested as an integer. The start time of the request is calculated by multiplying the Period by NumSamples - 1, then subtracting this from the EndTime. The actual maximum amount of samples returned is actually NumSamples + 2. This is because we return the previous and next samples before and after the requested range.This is useful as it tells you where the next data is before and after where you requested it.</param>
@@ -56,6 +80,30 @@ namespace Citect
             var endTimeSeconds = new DateTimeOffset(endtime.ToUniversalTime()).ToUnixTimeSeconds();
             var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = ctApi.Find(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
+
+            return ToTrnData(result);
+        }
+
+        /// <summary>
+        /// Search trend data.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="endtime">End time of the trend query.</param>
+        /// <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+        /// <param name="numSamples">Number of samples requested as an integer. The start time of the request is calculated by multiplying the Period by NumSamples - 1, then subtracting this from the EndTime. The actual maximum amount of samples returned is actually NumSamples + 2. This is because we return the previous and next samples before and after the requested range.This is useful as it tells you where the next data is before and after where you requested it.</param>
+        /// <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+        /// <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="DisplayMode"/> to calculate this value.</param>
+        /// <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+        /// <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+        /// <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+        /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<TrnData>> TrnQueryAsync(this CtApi ctApi, DateTime endtime, float period, int numSamples, string tagName, uint displayMode, int dataMode, int instantTrend, int samplePeriod, string cluster)
+        {
+            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            var endTimeSeconds = new DateTimeOffset(endtime.ToUniversalTime()).ToUnixTimeSeconds();
+            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var result = await ctApi.FindAsync(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
 
             return ToTrnData(result);
         }
@@ -85,6 +133,35 @@ namespace Citect
 
             var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{Math.Round(numSamples)},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = ctApi.Find(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
+
+            return ToTrnData(result);
+        }
+
+        /// <summary>
+        /// Search trend data.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="starttime">End time of the trend query.</param>
+        /// <param name="endtime">End time of the trend query.</param>
+        /// <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+        /// <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+        /// <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="DisplayMode"/> to calculate this value.</param>
+        /// <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+        /// <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+        /// <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+        /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+        /// <returns></returns>
+        public static async Task<IEnumerable<TrnData>> TrnQueryAsync(this CtApi ctApi, DateTime starttime, DateTime endtime, float period, string tagName, uint displayMode, int dataMode, string cluster)
+        {
+            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
+            var endTimeSeconds = new DateTimeOffset(endtime.ToUniversalTime()).ToUnixTimeSeconds();
+            var totalSeconds = endtime.Subtract(starttime).TotalSeconds;
+            var numSamples = totalSeconds / period;
+            var instantTrend = 0;
+            var samplePeriod = 250;
+
+            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{Math.Round(numSamples)},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var result = await ctApi.FindAsync(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
 
             return ToTrnData(result);
         }
