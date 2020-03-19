@@ -10,14 +10,24 @@ namespace ConsoleApp1
         {
             using (var ctApi = new CtApi(true))
             {
-                var trends = ctApi.TrnQuery(
-                    starttime: DateTime.Now.AddHours(-1),
-                    endtime: DateTime.Now,
-                    period: 300,
-                    tagName: "LOOP_5_PV",
-                    displayMode: DisplayMode.Get(Ordering.OldestToNewest, Condense.Mean, Stretch.Step, 0, BadQuality.Zero, Raw.None),
-                    dataMode: 1,
-                    cluster: "Cluster1");
+                var equipments = ctApi.Find("Equip", "", "Cluster1", "NAME", "COMMENT", "IODEVICE", "PAGE");
+                foreach (var equip in equipments)
+                {
+                    try
+                    {
+                        if (equip["NAME"] == "IOServer.CAPCONVEYOR_PM800")
+                        {
+
+                        }
+
+                        var tag = ctApi.Cicode($@"EquipGetProperty(""{equip["NAME"]}"", ""TAGPREFIX"", 0, ""Cluster1"")");
+                      
+
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
             }
         }
     }

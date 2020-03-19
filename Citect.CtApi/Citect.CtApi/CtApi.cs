@@ -252,7 +252,7 @@ namespace Citect
         {
             logger?.LogInformation($"Read a tag: tag={tag}");
 
-            var value = new StringBuilder(25);
+            var value = new StringBuilder(100);
             var result = CtTagRead(hCtapi, tag, value, value.Capacity);
             if (result == false)
             {
@@ -320,7 +320,7 @@ namespace Citect
         {
             logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}");
 
-            var value = new StringBuilder(25);
+            var value = new StringBuilder(100);
             var result = CtCicode(hCtapi, cmd, win, 0, value, value.Capacity, IntPtr.Zero);
             if (result == 0)
             {
