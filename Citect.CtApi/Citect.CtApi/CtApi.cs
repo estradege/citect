@@ -220,17 +220,21 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public void Close()
         {
-            logger?.LogInformation($"Close the connection");
-
-            var result = CtClose(hCtapi);
-            if (result == false)
+            if (hCtapi != IntPtr.Zero)
             {
-                var error = new Win32Exception(Marshal.GetLastWin32Error());
-                logger?.LogError(error, "CtClose");
-                throw error;
-            }
+                logger?.LogInformation($"Close the connection");
 
-            logger?.LogDebug($"Connection is closed");
+                var result = CtClose(hCtapi);
+                if (result == false)
+                {
+                    var error = new Win32Exception(Marshal.GetLastWin32Error());
+                    logger?.LogError(error, "CtClose");
+                    throw error;
+                }
+
+                hCtapi = IntPtr.Zero;
+                logger?.LogDebug($"Connection is closed");
+            }
         }
 
         /// <summary>
@@ -250,7 +254,7 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public string TagRead(string tag)
         {
-            logger?.LogInformation($"Read a tag: tag={tag}");
+            logger?.LogDebug($"Read a tag: tag={tag}");
 
             var value = new StringBuilder(100);
             var result = CtTagRead(hCtapi, tag, value, value.Capacity);
@@ -262,7 +266,7 @@ namespace Citect
             }
             else
             {
-                logger?.LogInformation($"Read a tag: tag={tag}, value={value.ToString()}");
+                logger?.LogDebug($"Read a tag: tag={tag}, value={value.ToString()}");
                 return value.ToString();
             }
         }
@@ -286,7 +290,7 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public void TagWrite(string tag, string value)
         {
-            logger?.LogInformation($"Write a tag: tag={tag}, value={value}");
+            logger?.LogDebug($"Write a tag: tag={tag}, value={value}");
 
             var result = CtTagWrite(hCtapi, tag, value);
             if (result == false)
@@ -318,7 +322,7 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public string Cicode(string cmd, uint win = 0)
         {
-            logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}");
+            logger?.LogDebug($"Executes a Cicode function: cmd={cmd}, win={win}");
 
             var value = new StringBuilder(100);
             var result = CtCicode(hCtapi, cmd, win, 0, value, value.Capacity, IntPtr.Zero);
@@ -330,7 +334,7 @@ namespace Citect
             }
             else
             {
-                logger?.LogInformation($"Executes a Cicode function: cmd={cmd}, win={win}, value={value.ToString()}");
+                logger?.LogDebug($"Executes a Cicode function: cmd={cmd}, win={win}, value={value.ToString()}");
                 return value.ToString();
             }
         }
@@ -356,7 +360,7 @@ namespace Citect
         /// <param name="propertiesName">The name of the properties to be retrieved.</param>
         public IEnumerable<Dictionary<string, string>> Find(string tableName, string filter, string cluster, params string[] propertiesName)
         {
-            logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}");
+            logger?.LogDebug($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}");
 
             var hfindptr = IntPtr.Zero;
             var hfind = CtFindFirstEx(hCtapi, tableName, filter, cluster, ref hfindptr, 0);
@@ -380,7 +384,7 @@ namespace Citect
             } while (CtFindNext(hfind, ref hfindptr));            
             CtFindClose(hfind);
 
-            logger?.LogInformation($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
+            logger?.LogDebug($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
 
             return items;
         }
