@@ -211,7 +211,7 @@ namespace Citect
                 throw error;
             }
 
-            logger?.LogDebug($"Connection is opened");
+            logger?.LogInformation($"Connection is opened");
         }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace Citect
                 }
 
                 hCtapi = IntPtr.Zero;
-                logger?.LogDebug($"Connection is closed");
+                logger?.LogInformation($"Connection is closed");
             }
         }
 
@@ -397,7 +397,7 @@ namespace Citect
         /// <returns>The property value.</returns>
         private string GetProperty(IntPtr hfindptr, string propertyName)
         {
-            logger?.LogDebug($"Get a property: propertyName={propertyName}");
+            logger?.LogTrace($"Get a property: propertyName={propertyName}");
 
             var pData = new StringBuilder(100);
             var dwResultLength = UIntPtr.Zero;
@@ -410,7 +410,7 @@ namespace Citect
             }
             else
             {
-                logger?.LogDebug($"Get a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
+                logger?.LogTrace($"Get a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
                 return pData.ToString();
             }
         }
