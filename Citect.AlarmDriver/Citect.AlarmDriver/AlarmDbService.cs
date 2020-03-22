@@ -109,23 +109,29 @@ where AlarmLastUpdateTime>={{ts '{ts}'}} or ConfigTime>={{ts '{ts}'}}";
 
             return alarms;
         }
+
+        /// <summary>
+        /// Get the event journal
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<Event>> GetEventJournalAsync(DateTime starttime, DateTime endtime)
+        {
+            var sql = $@"select 
+Id as ""AlarmId"",
+RecordTime,
+AlarmStateDesc,
+Message,
+Category,
+User,
+ClientName
+from CDBEventJournal
+where (RecordTime between {{ts '{starttime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}} and {{ts '{endtime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}})";
+
+            logger?.LogInformation($"GetEventJournalAsync: sql={sql}");
+            var events = await db.QueryAsync<Event>(sql);
+            logger?.LogDebug($"GetEventJournalAsync: events.Count={events.Count()}");
+
+            return events;
+        }
     }
 }
-
-/*
-//var sql = "select 
-CiAlarmObject.Equipment,
-CiAlarmObject.AlarmSource,
-CiAlarmObject.AlarmCategory,
-Historic.CDBEventJournal.RecordTime,
-Historic.CDBEventJournal.AlarmStateDesc,
-Historic.CDBEventJournal.Message,
-Historic.CDBEventJournal.ClientName,
-Historic.CDBEventJournal.User";
-//sql += " from Historic.CDBEventJournal";
-//                    sql += " join Citect.CiAlarmObject on Citect.CiAlarmObject.Id=Historic.CDBEventJournal.Id";
-//                 // sql += " where Historic.CDBEventJournal.AlarmStateDesc<>''";
-//                    sql += $" where (Historic.CDBEventJournal.RecordTime between {{ts '{utcFrom.ToString("yyyy-MM-dd HH:mm:ss")}'}} and {{ts '{utcTo.ToString("yyyy-MM-dd HH:mm:ss")}'}})";
-//                    sql += $" and ({alarmCategoryFilter})";
-
-    */
