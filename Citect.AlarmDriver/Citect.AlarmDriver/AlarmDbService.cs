@@ -111,3 +111,21 @@ where AlarmLastUpdateTime>={{ts '{ts}'}} or ConfigTime>={{ts '{ts}'}}";
         }
     }
 }
+
+/*
+//var sql = "select 
+CiAlarmObject.Equipment,
+CiAlarmObject.AlarmSource,
+CiAlarmObject.AlarmCategory,
+Historic.CDBEventJournal.RecordTime,
+Historic.CDBEventJournal.AlarmStateDesc,
+Historic.CDBEventJournal.Message,
+Historic.CDBEventJournal.ClientName,
+Historic.CDBEventJournal.User";
+//sql += " from Historic.CDBEventJournal";
+//                    sql += " join Citect.CiAlarmObject on Citect.CiAlarmObject.Id=Historic.CDBEventJournal.Id";
+//                 // sql += " where Historic.CDBEventJournal.AlarmStateDesc<>''";
+//                    sql += $" where (Historic.CDBEventJournal.RecordTime between {{ts '{utcFrom.ToString("yyyy-MM-dd HH:mm:ss")}'}} and {{ts '{utcTo.ToString("yyyy-MM-dd HH:mm:ss")}'}})";
+//                    sql += $" and ({alarmCategoryFilter})";
+
+    */
