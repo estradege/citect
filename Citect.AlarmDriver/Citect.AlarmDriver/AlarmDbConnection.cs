@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
@@ -50,6 +51,18 @@ namespace Citect.AlarmDriver
         public AlarmDbConnection(string server, string systemsXml)
         {
             connection = new OdbcConnection($"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={systemsXml};");
+        }
+
+        /// <summary>
+        /// Create a new Citect alarm database connection
+        /// </summary>
+        public AlarmDbConnection(IConfiguration config)
+        {
+            var server = config["Citect:AlarmDbConnection:Server"];
+            var ip = config["Citect:AlarmDbConnection:Ip"];
+            var port = config["Citect:AlarmDbConnection:Port"];
+
+            connection = new AlarmDbConnection(server, ip, Convert.ToInt32(port));
         }
 
         protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)

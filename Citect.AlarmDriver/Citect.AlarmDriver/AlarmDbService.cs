@@ -26,9 +26,17 @@ namespace Citect.AlarmDriver
         /// <summary>
         /// Create a new Citect alarm database service
         /// </summary>
-        public AlarmDbService(string server, string ip, int port, ILogger<AlarmDbService> logger = null)
+        public AlarmDbService(string server, string ip, int port)
         {
             db = new AlarmDbConnection(server, ip, port);
+        }
+
+        /// <summary>
+        /// Create a new Citect alarm database service
+        /// </summary>
+        public AlarmDbService(string server, string systemsXml)
+        {
+            db = new AlarmDbConnection(server, systemsXml);
         }
 
         /// <summary>
@@ -37,9 +45,9 @@ namespace Citect.AlarmDriver
         public AlarmDbService(IConfiguration config, ILogger<AlarmDbService> logger)
         {
             this.logger = logger;
-            var server = config["AlarmDbConnection:Server"];
-            var ip = config["AlarmDbConnection:Ip"];
-            var port = config["AlarmDbConnection:Port"];
+            var server = config["Citect:AlarmDbConnection:Server"];
+            var ip = config["Citect:AlarmDbConnection:Ip"];
+            var port = config["Citect:AlarmDbConnection:Port"];
             db = new AlarmDbConnection(server, ip, Convert.ToInt32(port));
         }
 
@@ -77,7 +85,7 @@ AlarmLastUpdateTime as ""UpdateTime"",
 ConfigTime
 from CiAlarmObject";
 
-            logger?.LogInformation($"GetAlarmsAsync: sql={sql}");
+            logger?.LogDebug($"GetAlarmsAsync: sql={sql}");
             var alarms = await db.QueryAsync<Alarm>(sql);
             logger?.LogDebug($"GetAlarmsAsync: alarms.Count={alarms.Count()}");
 
@@ -103,7 +111,7 @@ DisableTime
 from CiAlarmObject
 where AlarmLastUpdateTime>={{ts '{ts}'}} or ConfigTime>={{ts '{ts}'}}";
 
-            logger?.LogInformation($"GetLastAlarmsAsync: sql={sql}");
+            logger?.LogDebug($"GetLastAlarmsAsync: sql={sql}");
             var alarms = await db.QueryAsync<AlarmState>(sql);
             logger?.LogDebug($"GetLastAlarmsAsync: alarms.Count={alarms.Count()}");
 
@@ -127,7 +135,7 @@ ClientName
 from CDBEventJournal
 where (RecordTime between {{ts '{starttime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}} and {{ts '{endtime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}})";
 
-            logger?.LogInformation($"GetEventJournalAsync: sql={sql}");
+            logger?.LogDebug($"GetEventJournalAsync: sql={sql}");
             var events = await db.QueryAsync<Event>(sql);
             logger?.LogDebug($"GetEventJournalAsync: events.Count={events.Count()}");
 
