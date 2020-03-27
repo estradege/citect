@@ -13,10 +13,7 @@ namespace Citect.AlarmDriver
     /// </summary>
     public class AlarmDbConnection : DbConnection
     {
-        /// <summary>
-        /// Database connection
-        /// </summary>
-        private readonly DbConnection connection;
+        #region DbConnection
 
         public override string ConnectionString { get => connection.ConnectionString; set => connection.ConnectionString = value; }
 
@@ -28,10 +25,67 @@ namespace Citect.AlarmDriver
 
         public override ConnectionState State => connection.State;
 
+        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel) => connection.BeginTransaction(isolationLevel);
+
+        public override void ChangeDatabase(string databaseName) => connection.ChangeDatabase(databaseName);
+
+        public override void Close() => connection.Close();
+
+        protected override DbCommand CreateDbCommand() => connection.CreateCommand();
+
+        public override void Open() => connection.Open();
+
+        #endregion
+
+        /// <summary>
+        /// Database connection
+        /// </summary>
+        private readonly DbConnection connection = new OdbcConnection();
+
         /// <summary>
         /// Create a new Citect alarm database connection
         /// </summary>
-        public AlarmDbConnection(string server, string ip, int port)
+        public AlarmDbConnection()
+        {
+        }
+
+        /// <summary>
+        /// Create a new Citect alarm database connection
+        /// </summary>
+        public AlarmDbConnection(string server, string ip, int port = 5482)
+        {
+            SetConnectionString(server, ip, port);
+        }
+
+        /// <summary>
+        /// Create a new Citect alarm database connection
+        /// </summary>
+        public AlarmDbConnection(string server, string systemsXml)
+        {
+            SetConnectionString(server, systemsXml);
+        }
+
+        /// <summary>
+        /// Create a new Citect alarm database connection
+        /// </summary>
+        public AlarmDbConnection(IConfiguration config)
+        {
+            if (!int.TryParse(config["Citect:AlarmDbConnection:Port"], out var port))
+                port = 5482;
+            
+            SetConnectionString(
+                server: config["Citect:AlarmDbConnection:Server"],
+                ip: config["Citect:AlarmDbConnection:Ip"],
+                port: port);
+        }
+
+        /// <summary>
+        /// Définit la connectionstring de la <see cref="DbConnection"/>
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void SetConnectionString(string server, string ip, int port = 5482)
         {
             var xmlPath = $"{server}.auto.xml";
             var xmlContents = $@"<?xml version=""1.0"" encoding=""UTF-16""?>
@@ -42,52 +96,17 @@ namespace Citect.AlarmDriver
 </Systems>";
 
             File.WriteAllText(xmlPath, xmlContents, Encoding.Unicode);
-            connection = new OdbcConnection($"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={xmlPath};");
+            connection.ConnectionString = $"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={xmlPath};";
         }
 
         /// <summary>
-        /// Create a new Citect alarm database connection
+        /// Définit la connectionstring de la <see cref="DbConnection"/>
         /// </summary>
-        public AlarmDbConnection(string server, string systemsXml)
+        /// <param name="server"></param>
+        /// <param name="systemsXml"></param>
+        public void SetConnectionString(string server, string systemsXml)
         {
-            connection = new OdbcConnection($"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={systemsXml};");
-        }
-
-        /// <summary>
-        /// Create a new Citect alarm database connection
-        /// </summary>
-        public AlarmDbConnection(IConfiguration config)
-        {
-            var server = config["Citect:AlarmDbConnection:Server"];
-            var ip = config["Citect:AlarmDbConnection:Ip"];
-            var port = config["Citect:AlarmDbConnection:Port"];
-
-            connection = new AlarmDbConnection(server, ip, Convert.ToInt32(port));
-        }
-
-        protected override DbTransaction BeginDbTransaction(IsolationLevel isolationLevel)
-        {
-            return connection.BeginTransaction(isolationLevel);
-        }
-
-        public override void ChangeDatabase(string databaseName)
-        {
-            connection.ChangeDatabase(databaseName);
-        }
-
-        public override void Close()
-        {
-            connection.Close();
-        }
-
-        protected override DbCommand CreateDbCommand()
-        {
-            return connection.CreateCommand();
-        }
-
-        public override void Open()
-        {
-            connection.Open();
+            connection.ConnectionString = $"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={systemsXml};";
         }
     }
 }

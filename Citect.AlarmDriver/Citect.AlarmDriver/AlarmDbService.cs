@@ -14,21 +14,28 @@ namespace Citect.AlarmDriver
     public class AlarmDbService : IDisposable
     {
         /// <summary>
+        /// Database connectioon
+        /// </summary>
+        private readonly AlarmDbConnection db = new AlarmDbConnection();
+
+        /// <summary>
         /// Logging service
         /// </summary>
         private readonly ILogger<AlarmDbService> logger;
 
         /// <summary>
-        /// Database connectioon
+        /// Create a new Citect alarm database service
         /// </summary>
-        private readonly AlarmDbConnection db;
+        public AlarmDbService()
+        {
+        }
 
         /// <summary>
         /// Create a new Citect alarm database service
         /// </summary>
-        public AlarmDbService(string server, string ip, int port)
+        public AlarmDbService(string server, string ip, int port = 5482)
         {
-            db = new AlarmDbConnection(server, ip, port);
+            db.SetConnectionString(server, ip, port);
         }
 
         /// <summary>
@@ -36,7 +43,7 @@ namespace Citect.AlarmDriver
         /// </summary>
         public AlarmDbService(string server, string systemsXml)
         {
-            db = new AlarmDbConnection(server, systemsXml);
+            db.SetConnectionString(server, systemsXml);
         }
 
         /// <summary>
@@ -45,10 +52,14 @@ namespace Citect.AlarmDriver
         public AlarmDbService(IConfiguration config, ILogger<AlarmDbService> logger)
         {
             this.logger = logger;
-            var server = config["Citect:AlarmDbConnection:Server"];
-            var ip = config["Citect:AlarmDbConnection:Ip"];
-            var port = config["Citect:AlarmDbConnection:Port"];
-            db = new AlarmDbConnection(server, ip, Convert.ToInt32(port));
+            
+            if (!int.TryParse(config["Citect:AlarmDbConnection:Port"], out var port))
+                port = 5482;
+            
+            db.SetConnectionString(
+                server: config["Citect:AlarmDbConnection:Server"],
+                ip: config["Citect:AlarmDbConnection:Ip"],
+                port: port);
         }
 
         /// <summary>
@@ -57,6 +68,18 @@ namespace Citect.AlarmDriver
         public void Dispose()
         {
             db?.Close();
+            db?.Dispose();
+        }
+
+        /// <summary>
+        /// Switch the connection to another server
+        /// </summary>
+        /// <param name="server"></param>
+        /// <param name="ip"></param>
+        /// <param name="port"></param>
+        public void ChangeServer(string server, string ip, int port = 5482)
+        {
+            db.SetConnectionString(server, ip, port);
         }
 
         /// <summary>
