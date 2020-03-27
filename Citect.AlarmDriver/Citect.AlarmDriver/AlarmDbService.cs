@@ -11,7 +11,7 @@ namespace Citect.AlarmDriver
     /// <summary>
     /// Citect alarm database service
     /// </summary>
-    public class AlarmDbService
+    public class AlarmDbService : IDisposable
     {
         /// <summary>
         /// Logging service
@@ -49,6 +49,14 @@ namespace Citect.AlarmDriver
             var ip = config["Citect:AlarmDbConnection:Ip"];
             var port = config["Citect:AlarmDbConnection:Port"];
             db = new AlarmDbConnection(server, ip, Convert.ToInt32(port));
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            db?.Close();
         }
 
         /// <summary>
