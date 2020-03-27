@@ -15,7 +15,11 @@ namespace Citect.AlarmDriver
         /// <summary>
         /// The timestamp of the record.
         /// </summary>
-        public DateTime ReordTime { get => recordTime; set => recordTime = DateTime.SpecifyKind(value, DateTimeKind.Utc); }
+        public DateTime RecordTime
+        {
+            get => recordTime; 
+            set => recordTime = DateTime.SpecifyKind(value, DateTimeKind.Utc);
+        }
         private DateTime recordTime;
 
         /// <summary>

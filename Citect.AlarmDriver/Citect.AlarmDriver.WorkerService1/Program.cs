@@ -20,6 +20,7 @@ namespace Citect.AlarmDriver.WorkerService1
                 {
                     services.AddHostedService<Worker>();
                     services.AddTransient<AlarmDbConnection>();
+                    services.AddTransient<AlarmDbService>();
                 });
     }
 }
