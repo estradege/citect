@@ -7,7 +7,11 @@
     <PackageProjectUrl>https://github.com/estradege/citect</PackageProjectUrl>
     <Authors>Geoffrey Estrade</Authors>
     <Description>Citect CtApi .net wrapper</Description>
-    <Version>1.3.4</Version>
+    <Version>1.3.5</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\Users\gestrade\Source\Repos\citect\Citect.CtApi\Citect.CtApi\Citect.CtApi.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +22,12 @@
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Citect.CtApi.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

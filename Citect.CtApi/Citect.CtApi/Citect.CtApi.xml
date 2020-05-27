@@ -1,0 +1,682 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Citect.CtApi</name>
+    </assembly>
+    <members>
+        <member name="T:Citect.CtApi">
+            <summary>
+            Citect ctapi wrapper
+            </summary>
+        </member>
+        <member name="M:Citect.CtApi.CtOpen(System.String,System.String,System.String,System.UInt32)">
+            <summary>
+            Opens a connection to the Citect SCADA API.
+            </summary>
+            <param name="sComputer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name.</param>
+            <param name="sUser">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
+            <param name="sPassword">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+            <param name="nMode">The mode of the Cicode call. Set this to 0 (zero).</param>
+            <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtClose(System.IntPtr)">
+            <summary>
+            Closes a connection to the Citect SCADA API.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtTagRead(System.IntPtr,System.String,System.Text.StringBuilder,System.Int32)">
+            <summary>
+            Reads the current value from the given I/O Device variable tag.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <param name="sTag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <param name="sValue">The buffer to store the read data. The data is returned in string format.</param>
+            <param name="dwLength">The length of the read buffer. If the data is bigger than the dwLength, the function will not succeed.</param>
+            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtTagWrite(System.IntPtr,System.String,System.String)">
+            <summary>
+            Writes the given value to the I/O Device variable tag.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <param name="sTag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <param name="sValue">The value to write to the tag as a string.</param>
+            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtCicode(System.IntPtr,System.String,System.UInt32,System.UInt32,System.Text.StringBuilder,System.Int32,System.IntPtr)">
+            <summary>
+            Executes a Cicode function.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <param name="sCmd">The command to execute.</param>
+            <param name="hWin">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+            <param name="nMode">The mode of the Cicode call. Set this to 0 (zero).</param>
+            <param name="sResult">The buffer to put the result of the function call, which is returned as a string. This may be NULL if you do not require the result of the function.</param>
+            <param name="dwLength">The length of the sResult buffer. If the result of the Cicode function is longer than the this number, then the result is not returned and the function call does not succeed, however the Cicode function is still executed. If the sResult is NULL then this length needs to be 0.</param>
+            <param name="pctOverlapped">CTOVERLAPPED structure. This structure is used to control the overlapped notification. Set to NULL if you want a synchronous function call.</param>
+            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtFindFirstEx(System.IntPtr,System.String,System.String,System.String,System.IntPtr@,System.Int32)">
+            <summary>
+            Searches for the first object in the specified database which satisfies the filter string specified by cluster.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <param name="szTableName">The table, device, trend, or alarm data to be searched.</param>
+            <param name="szFilter">Filter criteria.</param>
+            <param name="szCluster">Specifies on which cluster the ctFindFirst function will be performed. If left NULL or empty string then the ctFindFirst will be performed on the active cluster if there is only one.</param>
+            <param name="pObjHnd">The pointer to the found object handle. This is used to retrieve the properties.</param>
+            <param name="dwFlags">This argument is no longer used, pass in a value of 0 for this argument.</param>
+            <returns>If the function succeeds, the return value is a search handle used in a subsequent call to ctFindNext() or ctFindClose(). If the function does not succeed, the return value is NULL. To get extended error information, call GetLastError()</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtFindNext(System.IntPtr,System.IntPtr@)">
+            <summary>
+            Retrieves the next object in a search initiated by ctFindFirst().
+            </summary>
+            <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
+            <param name="pObjHnd">The pointer to the found object handle. This is used to retrieve the properties.</param>
+            <returns>If the function succeeds, the return value is TRUE (1). If the function does not succeed, the return value is FALSE (0). To get extended error information, call GetLastError()</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtFindClose(System.IntPtr)">
+            <summary>
+            Closes a search initiated by ctFindFirst().
+            </summary>
+            <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
+            <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtGetProperty(System.IntPtr,System.String,System.Text.StringBuilder,System.UInt32,System.UIntPtr@,System.UInt32)">
+            <summary>
+            Retrieves an object property.
+            </summary>
+            <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
+            <param name="szName">The name of the property to be retrieved.</param>
+            <param name="pData">The result buffer to store the read data. The data is raw binary data, no data conversion or scaling is performed. If this buffer is not large enough to receive the data, the data will be truncated, and the function will return false.</param>
+            <param name="dwBufferLength">Length of result buffer. If the result buffer is not large enough to receive the data, the data will be truncated, and the function will return false.</param>
+            <param name="dwResultLength">Length of returned result. You can pass NULL if you want to ignore this parameter.</param>
+            <param name="dwType">The desired return type.</param>
+            <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="F:Citect.CtApi.hCtapi">
+            <summary>
+            Handle of ctapi connection
+            </summary>
+        </member>
+        <member name="F:Citect.CtApi.logger">
+            <summary>
+            Looging service
+            </summary>
+        </member>
+        <member name="M:Citect.CtApi.#ctor">
+            <summary>
+            Create a new Citect ctapi wrapper
+            </summary>
+        </member>
+        <member name="M:Citect.CtApi.#ctor(Microsoft.Extensions.Logging.ILogger{Citect.CtApi})">
+            <summary>
+            Create a new Citect ctapi wrapper
+            </summary>
+        </member>
+        <member name="M:Citect.CtApi.#ctor(System.Boolean,System.String,System.String,System.String)">
+            <summary>
+            Create a new Citect ctapi wrapper
+            </summary>
+        </member>
+        <member name="M:Citect.CtApi.Dispose">
+            <summary>
+            Dispose the Citect ctapi wrapper and close the connection
+            </summary>
+        </member>
+        <member name="M:Citect.CtApi.OpenAsync">
+            <summary>
+            Open the connection
+            </summary>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.OpenAsync(System.String,System.String,System.String)">
+            <summary>
+            Open the connection
+            </summary>
+            <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
+            <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
+            <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.Open">
+            <summary>
+            Open the connection
+            </summary>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.Open(System.String,System.String,System.String)">
+            <summary>
+            Open the connection
+            </summary>
+            <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
+            <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
+            <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.Close">
+            <summary>
+            Closes a connection to the Citect SCADA API.
+            </summary>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.TagReadAsync(System.String)">
+            <summary>
+            Reads the current value from the given I/O Device variable tag.
+            </summary>
+            <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.TagRead(System.String)">
+            <summary>
+            Reads the current value from the given I/O Device variable tag.
+            </summary>
+            <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.TagWriteAsync(System.String,System.String)">
+            <summary>
+            Writes the given value to the I/O Device variable tag.
+            </summary>
+            <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <param name="value">The value to write to the tag as a string.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.TagWrite(System.String,System.String)">
+            <summary>
+            Writes the given value to the I/O Device variable tag.
+            </summary>
+            <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <param name="value">The value to write to the tag as a string.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.CicodeAsync(System.String,System.UInt32)">
+            <summary>
+            Executes a Cicode function.
+            </summary>
+            <param name="cmd">The command to execute.</param>
+            <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.Cicode(System.String,System.UInt32)">
+            <summary>
+            Executes a Cicode function.
+            </summary>
+            <param name="cmd">The command to execute.</param>
+            <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.FindAsync(System.String,System.String,System.String,System.String[])">
+            <summary>
+            Searches objects in the specified database which satisfies the filter string specified by cluster.
+            </summary>
+            <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
+            <param name="filter">Filter criteria.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <param name="propertiesName">The name of the properties to be retrieved.</param>
+        </member>
+        <member name="M:Citect.CtApi.Find(System.String,System.String,System.String,System.String[])">
+            <summary>
+            Searches objects in the specified database which satisfies the filter string specified by cluster.
+            </summary>
+            <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
+            <param name="filter">Filter criteria.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <param name="propertiesName">The name of the properties to be retrieved.</param>
+        </member>
+        <member name="M:Citect.CtApi.GetProperty(System.IntPtr,System.String)">
+            <summary>
+            Retrieves an object property.
+            </summary>
+            <param name="hfindptr">Handle to the search, as returned by ctFindFirst().</param>
+            <param name="propertyName">The name of the property to be retrieved.</param>
+            <returns>The property value.</returns>
+        </member>
+        <member name="T:Citect.CtApiAlarmEx">
+            <summary>
+            Extension methods wrapping cicode alarm functions
+            </summary>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmAckTag(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Acknowledge a specified alarm.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tag">A string that identifies the alarm to acknowledge</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmAckTagAsync(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Acknowledge a specified alarm.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tag">A string that identifies the alarm to acknowledge</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmDisableTag(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Disables alarms by tag name.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tag">A string that identifies the alarm to disable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmDisableTagAsync(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Disables alarms by tag name.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tag">A string that identifies the alarm to disable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmEnableTag(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Enables alarms by tag name.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tag">A string that identifies the alarm to enable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmEnableTagAsync(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Enables alarms by tag name.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tag">A string that identifies the alarm to enable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="T:Citect.CtApiMiscellaneousEx">
+            <summary>
+            Extension methods wrapping cicode miscellaneous functions
+            </summary>
+        </member>
+        <member name="M:Citect.CtApiMiscellaneousEx.Shutdown(Citect.CtApi,System.String,System.String,System.Int32,System.String,System.Int32)">
+            <summary>
+            Ends Citect SCADA's operation
+            </summary>
+            <param name="ctApi"></param>
+            <param name="dest">The destination computer(s) on which Citect SCADA will be shut down.</param>
+            <param name="project">The full path of the project to run on restart as a string.</param>
+            <param name="mode">The type of shutdown.</param>
+            <param name="clusterName">The name of the cluster to which the machine(s) named in Dest belong.</param>
+            <param name="callEvent">Flag for initiating a user-specified shutdown event prior to shutting down.</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiMiscellaneousEx.ShutdownAsync(Citect.CtApi,System.String,System.String,System.Int32,System.String,System.Int32)">
+            <summary>
+            Ends Citect SCADA's operation
+            </summary>
+            <param name="ctApi"></param>
+            <param name="dest">The destination computer(s) on which Citect SCADA will be shut down.</param>
+            <param name="project">The full path of the project to run on restart as a string.</param>
+            <param name="mode">The type of shutdown.</param>
+            <param name="clusterName">The name of the cluster to which the machine(s) named in Dest belong.</param>
+            <param name="callEvent">Flag for initiating a user-specified shutdown event prior to shutting down.</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="T:Citect.CtApiPageEx">
+            <summary>
+            Extension methods wrapping cicode page functions
+            </summary>
+        </member>
+        <member name="M:Citect.CtApiPageEx.PageDisplay(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Displays a graphics page.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="page">The name or page number of the page to display.</param>
+            <param name="clusterName">The name of the cluster that will accommodate the page at runtime.</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiPageEx.PageDisplayAsync(Citect.CtApi,System.String,System.String)">
+            <summary>
+            Displays a graphics page.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="page">The name or page number of the page to display.</param>
+            <param name="clusterName">The name of the cluster that will accommodate the page at runtime.</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="T:Citect.CtApiTrnQueryEx">
+            <summary>
+            Extension methods to search trend data
+            </summary>
+        </member>
+        <member name="M:Citect.CtApiTrnQueryEx.TrnQuery(Citect.CtApi,System.Int64,System.Int32,System.Single,System.Int32,System.String,System.UInt32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Search trend data.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="endtime">End time of the trend query in seconds since 1970 as an integer. This time is expected to be a UTC time (Universal Time Coordinates).</param>
+            <param name="endtimeMs">Millisecond portion of the end time as an integer, expected to be a number between 0 and 999.</param>
+            <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+            <param name="numSamples">Number of samples requested as an integer. The start time of the request is calculated by multiplying the Period by NumSamples - 1, then subtracting this from the EndTime. The actual maximum amount of samples returned is actually NumSamples + 2. This is because we return the previous and next samples before and after the requested range.This is useful as it tells you where the next data is before and after where you requested it.</param>
+            <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+            <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="T:Citect.DisplayMode"/> to calculate this value.</param>
+            <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+            <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+            <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiTrnQueryEx.TrnQueryAsync(Citect.CtApi,System.Int64,System.Int32,System.Single,System.Int32,System.String,System.UInt32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Search trend data.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="endtime">End time of the trend query in seconds since 1970 as an integer. This time is expected to be a UTC time (Universal Time Coordinates).</param>
+            <param name="endtimeMs">Millisecond portion of the end time as an integer, expected to be a number between 0 and 999.</param>
+            <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+            <param name="numSamples">Number of samples requested as an integer. The start time of the request is calculated by multiplying the Period by NumSamples - 1, then subtracting this from the EndTime. The actual maximum amount of samples returned is actually NumSamples + 2. This is because we return the previous and next samples before and after the requested range.This is useful as it tells you where the next data is before and after where you requested it.</param>
+            <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+            <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="T:Citect.DisplayMode"/> to calculate this value.</param>
+            <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+            <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+            <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiTrnQueryEx.TrnQuery(Citect.CtApi,System.DateTime,System.Single,System.Int32,System.String,System.UInt32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Search trend data.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="endtime">End time of the trend query.</param>
+            <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+            <param name="numSamples">Number of samples requested as an integer. The start time of the request is calculated by multiplying the Period by NumSamples - 1, then subtracting this from the EndTime. The actual maximum amount of samples returned is actually NumSamples + 2. This is because we return the previous and next samples before and after the requested range.This is useful as it tells you where the next data is before and after where you requested it.</param>
+            <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+            <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="T:Citect.DisplayMode"/> to calculate this value.</param>
+            <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+            <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+            <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiTrnQueryEx.TrnQueryAsync(Citect.CtApi,System.DateTime,System.Single,System.Int32,System.String,System.UInt32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Search trend data.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="endtime">End time of the trend query.</param>
+            <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+            <param name="numSamples">Number of samples requested as an integer. The start time of the request is calculated by multiplying the Period by NumSamples - 1, then subtracting this from the EndTime. The actual maximum amount of samples returned is actually NumSamples + 2. This is because we return the previous and next samples before and after the requested range.This is useful as it tells you where the next data is before and after where you requested it.</param>
+            <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+            <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="T:Citect.DisplayMode"/> to calculate this value.</param>
+            <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+            <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+            <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiTrnQueryEx.TrnQuery(Citect.CtApi,System.DateTime,System.DateTime,System.Single,System.String,System.UInt32,System.Int32,System.String)">
+            <summary>
+            Search trend data.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="starttime">End time of the trend query.</param>
+            <param name="endtime">End time of the trend query.</param>
+            <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+            <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+            <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="T:Citect.DisplayMode"/> to calculate this value.</param>
+            <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+            <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+            <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiTrnQueryEx.TrnQueryAsync(Citect.CtApi,System.DateTime,System.DateTime,System.Single,System.String,System.UInt32,System.Int32,System.String)">
+            <summary>
+            Search trend data.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="starttime">End time of the trend query.</param>
+            <param name="endtime">End time of the trend query.</param>
+            <param name="period">Time period in seconds between the samples returned as a floating point value.</param>
+            <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
+            <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="T:Citect.DisplayMode"/> to calculate this value.</param>
+            <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
+            <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
+            <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiTrnQueryEx.ToTrnData(System.Collections.Generic.IEnumerable{System.Collections.Generic.Dictionary{System.String,System.String}})">
+            <summary>
+            Convert the result of TrnQuery
+            </summary>
+            <param name="data">The raw TrnData returned by TrnQuery function</param>
+            <returns></returns>
+        </member>
+        <member name="T:Citect.TrnData">
+            <summary>
+            The following properties are returned for each data record of the query.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.DateTimeSeconds">
+            <summary>
+            Time of the trend sample in seconds since 1970 as an integer in UTC (Universal Time Coordinates).
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.DateTimeMSeconds">
+            <summary>
+            Millisecond component of the time of the trend sample as an integer.This value is inbetween 0 and 999.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.DateTime">
+            <summary>
+            Get the time of the trend sample in <see cref="T:System.DateTime"/> type.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.Value">
+            <summary>
+            Trend value of the sample as a double.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.Quality">
+            <summary>
+            The quality information associated with the trend sample as an unsigned integer.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.ValueType">
+            <summary>
+            The quality information associated with the trend sample.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.ValueQuality">
+            <summary>
+            The quality information associated with the trend sample.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.LastValueQuality">
+            <summary>
+            The quality information associated with the trend sample.
+            </summary>
+        </member>
+        <member name="P:Citect.TrnData.Partial">
+            <summary>
+            Indicates that the sample may change the next time it is read. This occurs when you get samples right at the current time, and a sample returned is not necessarily complete because more samples may be acquired in this period.
+            </summary>
+        </member>
+        <member name="T:Citect.DisplayMode">
+            <summary>
+             Options for formatting and calculating the samples of the query as an unsigned integer.
+            </summary>
+        </member>
+        <member name="M:Citect.DisplayMode.Get(Citect.Ordering,Citect.Condense,Citect.Stretch,System.UInt32,Citect.BadQuality,Citect.Raw)">
+            <summary>
+            Calculate the displayMode property
+            </summary>
+            <param name="ordering">Ordering Trend sample options</param>
+            <param name="condense">Condense method options</param>
+            <param name="stretch">Stretch method options</param>
+            <param name="gapFill">Gap Fill Constant option (the number of missed samples that the user wants to gap fill)</param>
+            <param name="badQuality">Last valid value option</param>
+            <param name="raw">Raw data option</param>
+            <returns>Options for formatting and calculating the samples of the query as an unsigned integer.</returns>
+        </member>
+        <member name="T:Citect.Ordering">
+            <summary>
+            Ordering Trend sample options
+            </summary>
+        </member>
+        <member name="F:Citect.Ordering.OldestToNewest">
+            <summary>
+            Order returned samples from oldest to newest.
+            </summary>
+        </member>
+        <member name="F:Citect.Ordering.NewestToOldest">
+            <summary>
+            Order returned samples from newest to oldest. This mode is not supported when the Raw data option has been specified.
+            </summary>
+        </member>
+        <member name="T:Citect.Condense">
+            <summary>
+            Condense method options
+            </summary>
+        </member>
+        <member name="F:Citect.Condense.Mean">
+            <summary>
+            Set the condense method to use the mean of the samples.
+            </summary>
+        </member>
+        <member name="F:Citect.Condense.Minimum">
+            <summary>
+            Set the condense method to use the minimum of the samples.
+            </summary>
+        </member>
+        <member name="F:Citect.Condense.Maximum">
+            <summary>
+            Set the condense method to use the maximum of the samples.
+            </summary>
+        </member>
+        <member name="F:Citect.Condense.Newest">
+            <summary>
+            Set the condense method to use the newest of the samples.
+            </summary>
+        </member>
+        <member name="T:Citect.Stretch">
+            <summary>
+            Stretch method options
+            </summary>
+        </member>
+        <member name="F:Citect.Stretch.Step">
+            <summary>
+            Set the stretch method to step.
+            </summary>
+        </member>
+        <member name="F:Citect.Stretch.Ratio">
+            <summary>
+            Set the stretch method to use a ratio.
+            </summary>
+        </member>
+        <member name="F:Citect.Stretch.Raw">
+            <summary>
+            Set the stretch method to use raw samples (no interpolation).
+            </summary>
+        </member>
+        <member name="T:Citect.BadQuality">
+            <summary>
+            Last valid value option
+            </summary>
+        </member>
+        <member name="F:Citect.BadQuality.Zero">
+            <summary>
+            If we are leaving the value given with a bad quality sample as 0.
+            </summary>
+        </member>
+        <member name="F:Citect.BadQuality.LastValidValue">
+            <summary>
+            If we are to set the value of a bad quality sample to the last valid value (zero if there is no last valid value).
+            </summary>
+        </member>
+        <member name="T:Citect.Raw">
+            <summary>
+            Raw data option
+            </summary>
+        </member>
+        <member name="F:Citect.Raw.None">
+            <summary>
+            If we are not returning raw data, that is we are using the condense and stretch modes to compress and interpolate the data.
+            </summary>
+        </member>
+        <member name="F:Citect.Raw.Totaly">
+            <summary>
+            If we are to return totally raw data, that is no compression or interpolation. This mode is only supported if we have specified the DataMode of the query = 1. When using this mode, more samples than the maximum specified above will be returned if there are more raw samples than the maximum in the time range.
+            </summary>
+        </member>
+        <member name="T:Citect.ValueType">
+            <summary>
+            Quality information associated with the trend sample
+            </summary>
+        </member>
+        <member name="F:Citect.ValueType.None">
+            <summary>
+            There is no value in the given sample. Ignore the sample value, time and quality.
+            </summary>
+        </member>
+        <member name="F:Citect.ValueType.Interpolated">
+            <summary>
+            The value has been interpolated from data around it.
+            </summary>
+        </member>
+        <member name="F:Citect.ValueType.SingleRaw">
+            <summary>
+            The value is based on one raw sample.
+            </summary>
+        </member>
+        <member name="F:Citect.ValueType.MultipleRaw">
+            <summary>
+            The value has been calculated from multiple raw samples.
+            </summary>
+        </member>
+        <member name="T:Citect.ValueQuality">
+            <summary>
+            Quality information associated with the trend sample
+            </summary>
+        </member>
+        <member name="F:Citect.ValueQuality.Bad">
+            <summary>
+            Ignore the value of the sample as there was no raw data to base it on.
+            </summary>
+        </member>
+        <member name="F:Citect.ValueQuality.Good">
+            <summary>
+            The value of the sample is valid, and is based on some raw data.
+            </summary>
+        </member>
+        <member name="T:Citect.LastValueQuality">
+            <summary>
+            Quality information associated with the trend sample
+            </summary>
+        </member>
+        <member name="F:Citect.LastValueQuality.Bad">
+            <summary>
+            The value of the sample should be ignored as there was no raw data to base it on.
+            </summary>
+        </member>
+        <member name="F:Citect.LastValueQuality.Good">
+            <summary>
+            The value quality of the last raw sample in the period was good.
+            </summary>
+        </member>
+        <member name="F:Citect.LastValueQuality.NotAvailable">
+            <summary>
+            The value quality of the last raw sample in the period was Not Available.
+            </summary>
+        </member>
+        <member name="F:Citect.LastValueQuality.Gated">
+            <summary>
+            The value quality of the last raw sample in the period was Gated.
+            </summary>
+        </member>
+    </members>
+</doc>
