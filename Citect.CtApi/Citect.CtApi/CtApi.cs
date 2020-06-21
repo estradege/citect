@@ -201,17 +201,15 @@ namespace Citect
                 Close();
             }
             
-            logger?.LogInformation($"Open a new connection: computer={computer}, user={user}");           
+            logger?.LogInformation($"Citect.CtApi > Open, computer={computer}, user={user}");           
             hCtapi = CtOpen(computer, user, password, 0);
             
             if (hCtapi == IntPtr.Zero)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                logger?.LogError(error, "CtOpen");
+                logger?.LogError($"Citect.CtApi > Open, computer={computer}, user={user}, error={error.Message}");
                 throw error;
             }
-
-            logger?.LogInformation($"Connection is opened");
         }
 
         /// <summary>
@@ -222,18 +220,17 @@ namespace Citect
         {
             if (hCtapi != IntPtr.Zero)
             {
-                logger?.LogInformation($"Close the connection");
+                logger?.LogInformation($"Citect.CtApi > Close");
 
                 var result = CtClose(hCtapi);
                 if (result == false)
                 {
                     var error = new Win32Exception(Marshal.GetLastWin32Error());
-                    logger?.LogError(error, "CtClose");
+                    logger?.LogError($"Citect.CtApi > Close, error={error.Message}");
                     throw error;
                 }
 
                 hCtapi = IntPtr.Zero;
-                logger?.LogInformation($"Connection is closed");
             }
         }
 
@@ -254,19 +251,19 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public string TagRead(string tag)
         {
-            logger?.LogDebug($"Read a tag: tag={tag}");
+            logger?.LogDebug($"Citect.CtApi > TagRead, tag={tag}");
 
             var value = new StringBuilder(100);
             var result = CtTagRead(hCtapi, tag, value, value.Capacity);
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                logger?.LogError(error, "CtTagRead");
+                logger?.LogError($"Citect.CtApi > TagRead, tag={tag}, error={error.Message}");
                 throw error;
             }
             else
             {
-                logger?.LogDebug($"Read a tag: tag={tag}, value={value.ToString()}");
+                logger?.LogDebug($"Citect.CtApi > TagRead, tag={tag}, value={value}");
                 return value.ToString();
             }
         }
@@ -290,17 +287,15 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public void TagWrite(string tag, string value)
         {
-            logger?.LogDebug($"Write a tag: tag={tag}, value={value}");
+            logger?.LogDebug($"Citect.CtApi > TagWrite, tag={tag}, value={value}");
 
             var result = CtTagWrite(hCtapi, tag, value);
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                logger?.LogError(error, "CtTagWrite");
+                logger?.LogDebug($"Citect.CtApi > TagWrite, tag={tag}, value={value}, error={error.Message}");
                 throw error;
             }
-
-            logger?.LogDebug($"Tag is written");
         }
 
         /// <summary>
@@ -322,19 +317,19 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public string Cicode(string cmd, uint win = 0)
         {
-            logger?.LogDebug($"Executes a Cicode function: cmd={cmd}, win={win}");
+            logger?.LogDebug($"Citect.CtApi > Cicode, cmd={cmd}, win={win}");
 
             var value = new StringBuilder(100);
             var result = CtCicode(hCtapi, cmd, win, 0, value, value.Capacity, IntPtr.Zero);
             if (result == 0)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                logger?.LogError(error, "CtCicode");
+                logger?.LogError($"Citect.CtApi > Cicode, cmd={cmd}, win={win}, error={error.Message}");
                 throw error;
             }
             else
             {
-                logger?.LogDebug($"Executes a Cicode function: cmd={cmd}, win={win}, value={value.ToString()}");
+                logger?.LogDebug($"Citect.CtApi > Cicode, cmd={cmd}, win={win}, value={value}");
                 return value.ToString();
             }
         }
@@ -360,14 +355,14 @@ namespace Citect
         /// <param name="propertiesName">The name of the properties to be retrieved.</param>
         public IEnumerable<Dictionary<string, string>> Find(string tableName, string filter, string cluster, params string[] propertiesName)
         {
-            logger?.LogDebug($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}");
+            logger?.LogDebug($"Citect.CtApi > Find, tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}");
 
             var hfindptr = IntPtr.Zero;
             var hfind = CtFindFirstEx(hCtapi, tableName, filter, cluster, ref hfindptr, 0);
             if (hfind == IntPtr.Zero)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                logger?.LogError(error, "CtFindFirstEx");
+                logger?.LogError($"Citect.CtApi > Find, tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, error={error.Message}");
                 throw error;
             }
 
@@ -384,7 +379,7 @@ namespace Citect
             } while (CtFindNext(hfind, ref hfindptr));            
             CtFindClose(hfind);
 
-            logger?.LogDebug($"Searches objects: tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
+            logger?.LogDebug($"Citect.CtApi > Find, tableName={tableName}, filter={filter}, cluster={cluster}, propertiesName={string.Join("|", propertiesName)}, objects.Count={items.Count}");
 
             return items;
         }
@@ -397,7 +392,7 @@ namespace Citect
         /// <returns>The property value.</returns>
         private string GetProperty(IntPtr hfindptr, string propertyName)
         {
-            logger?.LogTrace($"Get a property: propertyName={propertyName}");
+            logger?.LogTrace($"Citect.CtApi > GetProperty, propertyName={propertyName}");
 
             var pData = new StringBuilder(100);
             var dwResultLength = UIntPtr.Zero;
@@ -405,12 +400,12 @@ namespace Citect
             if (result == false)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
-                logger?.LogError(error, "CtGetProperty");
+                logger?.LogError($"Citect.CtApi > GetProperty, propertyName={propertyName}, error={error.Message}");
                 return null;
             }
             else
             {
-                logger?.LogTrace($"Get a property: propertyName={propertyName}, propertyValue={pData.ToString()}");
+                logger?.LogTrace($"Citect.CtApi > GetProperty, propertyName={propertyName}, propertyValue={pData}");
                 return pData.ToString();
             }
         }

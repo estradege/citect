@@ -116,9 +116,9 @@ AlarmLastUpdateTime as ""UpdateTime"",
 ConfigTime
 from CiAlarmObject";
 
-            logger?.LogDebug($"GetAlarmsAsync: sql={sql}");
+            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetAlarmsAsync, sql={sql}");
             var alarms = await db.QueryAsync<Alarm>(sql);
-            logger?.LogDebug($"GetAlarmsAsync: alarms.Count={alarms.Count()}");
+            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetAlarmsAsync, sql={sql}, alarms.Count={alarms.Count()}");
 
             return alarms;
         }
@@ -142,9 +142,9 @@ DisableTime
 from CiAlarmObject
 where AlarmLastUpdateTime>={{ts '{ts}'}} or ConfigTime>={{ts '{ts}'}}";
 
-            logger?.LogDebug($"GetLastAlarmsAsync: sql={sql}");
+            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetLastAlarmsAsync, wimdow={wimdow}, sql={sql}");
             var alarms = await db.QueryAsync<AlarmState>(sql);
-            logger?.LogDebug($"GetLastAlarmsAsync: alarms.Count={alarms.Count()}");
+            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetLastAlarmsAsync, wimdow={wimdow}, sql={sql}, alarms.Count={alarms.Count()}");
 
             return alarms;
         }
@@ -166,9 +166,9 @@ ClientName
 from CDBEventJournal
 where (RecordTime between {{ts '{starttime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}} and {{ts '{endtime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}})";
 
-            logger?.LogDebug($"GetEventJournalAsync: sql={sql}");
+            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetEventJournalAsync, starttime={starttime}, endtime={endtime}, sql={sql}");
             var events = await db.QueryAsync<Event>(sql);
-            logger?.LogDebug($"GetEventJournalAsync: events.Count={events.Count()}");
+            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetEventJournalAsync, starttime={starttime}, endtime={endtime}, sql={sql}, events.Count={events.Count()}");
 
             return events;
         }

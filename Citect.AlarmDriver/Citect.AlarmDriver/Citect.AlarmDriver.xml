@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Citect.AlarmDriver</name>
+    </assembly>
+    <members>
+        <member name="T:Citect.AlarmDriver.AlarmDbConnection">
+            <summary>
+            Citect alarm database connection using the ODBC Citect Alarm Driver
+            </summary>
+        </member>
+        <member name="F:Citect.AlarmDriver.AlarmDbConnection.connection">
+            <summary>
+            Database connection
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbConnection.#ctor">
+            <summary>
+            Create a new Citect alarm database connection
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbConnection.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            Create a new Citect alarm database connection
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbConnection.#ctor(System.String,System.String)">
+            <summary>
+            Create a new Citect alarm database connection
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbConnection.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Create a new Citect alarm database connection
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbConnection.SetConnectionString(System.String,System.String,System.Int32)">
+            <summary>
+            Définit la connectionstring de la <see cref="T:System.Data.Common.DbConnection"/>
+            </summary>
+            <param name="server"></param>
+            <param name="ip"></param>
+            <param name="port"></param>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbConnection.SetConnectionString(System.String,System.String)">
+            <summary>
+            Définit la connectionstring de la <see cref="T:System.Data.Common.DbConnection"/>
+            </summary>
+            <param name="server"></param>
+            <param name="systemsXml"></param>
+        </member>
+        <member name="T:Citect.AlarmDriver.AlarmDbService">
+            <summary>
+            Citect alarm database service
+            </summary>
+        </member>
+        <member name="F:Citect.AlarmDriver.AlarmDbService.db">
+            <summary>
+            Database connectioon
+            </summary>
+        </member>
+        <member name="F:Citect.AlarmDriver.AlarmDbService.logger">
+            <summary>
+            Logging service
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.#ctor">
+            <summary>
+            Create a new Citect alarm database service
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            Create a new Citect alarm database service
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.#ctor(System.String,System.String)">
+            <summary>
+            Create a new Citect alarm database service
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Citect.AlarmDriver.AlarmDbService})">
+            <summary>
+            Create a new Citect alarm database service
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.Dispose">
+            <summary>
+            Dispose
+            </summary>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.ChangeServer(System.String,System.String,System.Int32)">
+            <summary>
+            Switch the connection to another server
+            </summary>
+            <param name="server"></param>
+            <param name="ip"></param>
+            <param name="port"></param>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.GetAlarmsAsync">
+            <summary>
+            Get all alarm objects
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.GetLastAlarmsAsync(System.UInt32)">
+            <summary>
+            Get last change alarm state objects
+            </summary>
+            <param name="wimdow">Time window in seconds</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.AlarmDriver.AlarmDbService.GetEventJournalAsync(System.DateTime,System.DateTime)">
+            <summary>
+            Get the event journal
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Citect.AlarmDriver.Alarm">
+            <summary>
+            Citect Alarm object
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Id">
+            <summary>
+            The id of the alarm.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Tag">
+            <summary>
+            The name of the alarm tag.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Name">
+            <summary>
+            A meaningful description of the alarm.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Desc">
+            <summary>
+            A meaningful description of the alarm condition.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Category">
+            <summary>
+            The alarm category to which the alarm is assigned.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Help">
+            <summary>
+            The name of the graphics page that displays when the AlarmHelp() function is called by a user-defined command.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Comment">
+            <summary>
+            Any useful comment.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom1">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom2">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom3">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom4">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom5">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom6">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom7">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Custom8">
+            <summary>
+            A user-defined string.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Historian">
+            <summary>
+            This field enables you to automatically historize and publish the specified digital alarm in Schneider Electric's Historian application.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Equip">
+            <summary>
+            The name of the equipment associated with the alarm.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.Item">
+            <summary>
+            The name of the item with which the alarm is associated.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.State">
+            <summary>
+            The state of the alarm.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.AckTime">
+            <summary>
+            The timestamp of the last acknowledgement.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.OnTime">
+            <summary>
+            The timestamp of the last Off to On transition.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.OffTime">
+            <summary>
+            The timestamp of the last On to Off transition.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.DisableTime">
+            <summary>
+            The timestamp of the last Enabled to Disabled transition.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.UpdateTime">
+            <summary>
+            The timestamp of the last alarm update.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Alarm.ConfigTime">
+            <summary>
+            The timestamp of the last alarm config update.
+            </summary>
+        </member>
+        <member name="T:Citect.AlarmDriver.AlarmState">
+            <summary>
+            Citect Alarm State object
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.AlarmState.Id">
+            <summary>
+            The id of the alarm.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.AlarmState.Tag">
+            <summary>
+            The name of the alarm tag.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.AlarmState.State">
+            <summary>
+            The state of the alarm.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.AlarmState.AckTime">
+            <summary>
+            The timestamp of the last acknowledgement.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.AlarmState.OnTime">
+            <summary>
+            The timestamp of the last Off to On transition.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.AlarmState.OffTime">
+            <summary>
+            The timestamp of the last On to Off transition.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.AlarmState.DisableTime">
+            <summary>
+            The timestamp of the last Enabled to Disabled transition.
+            </summary>
+        </member>
+        <member name="T:Citect.AlarmDriver.Event">
+            <summary>
+            Citect Event object
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Event.AlarmId">
+            <summary>
+            The id of the alarm who raised the event.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Event.RecordTime">
+            <summary>
+            The timestamp of the record.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Event.AlarmStateDesc">
+            <summary>
+            The state of the alarm who raised the event.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Event.Message">
+            <summary>
+            The event message.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Event.Category">
+            <summary>
+            The event category.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Event.User">
+            <summary>
+            The user who raised the event.
+            </summary>
+        </member>
+        <member name="P:Citect.AlarmDriver.Event.ClientName">
+            <summary>
+            The name of the client (device) where the event was raised.
+            </summary>
+        </member>
+    </members>
+</doc>
