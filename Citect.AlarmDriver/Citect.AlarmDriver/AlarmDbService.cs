@@ -116,7 +116,7 @@ AlarmLastUpdateTime as ""UpdateTime"",
 ConfigTime
 from CiAlarmObject";
 
-            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetAlarmsAsync, sql={sql}");
+            logger?.LogTrace($"Citect.AlarmDriver.AlarmDbService > GetAlarmsAsync, sql={sql}");
             var alarms = await db.QueryAsync<Alarm>(sql);
             logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetAlarmsAsync, sql={sql}, alarms.Count={alarms.Count()}");
 
@@ -126,7 +126,7 @@ from CiAlarmObject";
         /// <summary>
         /// Get last change alarm state objects
         /// </summary>
-        /// <param name="wimdow">Time window in seconds</param>
+        /// <param name="wimdow">Time window in seconds (0 = all alarms)</param>
         /// <returns></returns>
         public async Task<IEnumerable<AlarmState>> GetLastAlarmsAsync(uint wimdow = 5)
         {
@@ -139,10 +139,14 @@ AckTime,
 OnTime,
 OffTime,
 DisableTime
-from CiAlarmObject
-where AlarmLastUpdateTime>={{ts '{ts}'}} or ConfigTime>={{ts '{ts}'}}";
+from CiAlarmObject";
 
-            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetLastAlarmsAsync, wimdow={wimdow}, sql={sql}");
+            if (wimdow > 0)
+            {
+                sql += $" where AlarmLastUpdateTime>={{ts '{ts}'}} or ConfigTime>={{ts '{ts}'}}";
+            }
+
+            logger?.LogTrace($"Citect.AlarmDriver.AlarmDbService > GetLastAlarmsAsync, wimdow={wimdow}, sql={sql}");
             var alarms = await db.QueryAsync<AlarmState>(sql);
             logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetLastAlarmsAsync, wimdow={wimdow}, sql={sql}, alarms.Count={alarms.Count()}");
 

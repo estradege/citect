@@ -107,7 +107,7 @@
             <summary>
             Get last change alarm state objects
             </summary>
-            <param name="wimdow">Time window in seconds</param>
+            <param name="wimdow">Time window in seconds (0 = all alarms)</param>
             <returns></returns>
         </member>
         <member name="M:Citect.AlarmDriver.AlarmDbService.GetEventJournalAsync(System.DateTime,System.DateTime)">
