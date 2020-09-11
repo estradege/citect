@@ -87,7 +87,7 @@ namespace Citect.AlarmDriver
         /// <param name="port"></param>
         public void SetConnectionString(string server, string ip, int port = 5482)
         {
-            var xmlPath = $"{server}.auto.xml";
+            var xmlFile = new FileInfo($@"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\CitectAlarmDriver\{server}.auto.xml");
             var xmlContents = $@"<?xml version=""1.0"" encoding=""UTF-16""?>
 <Systems>
     <System name=""{server}"" type=""SCX"" enabled=""true"" visibleInViewX=""true"" clientLicensing=""false"" defaultSystemPriority=""10"">
@@ -95,8 +95,9 @@ namespace Citect.AlarmDriver
     </System>
 </Systems>";
 
-            File.WriteAllText(xmlPath, xmlContents, Encoding.Unicode);
-            connection.ConnectionString = $"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={xmlPath};";
+            xmlFile.Directory.Create();
+            File.WriteAllText(xmlFile.FullName, xmlContents, Encoding.Unicode);
+            connection.ConnectionString = $"DRIVER={{Citect Alarm Driver}};Server={server};SystemsXml={xmlFile.FullName};";
         }
 
         /// <summary>

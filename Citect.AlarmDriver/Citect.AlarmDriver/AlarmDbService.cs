@@ -79,6 +79,7 @@ namespace Citect.AlarmDriver
         /// <param name="port"></param>
         public void ChangeServer(string server, string ip, int port = 5482)
         {
+            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > ChangeServer, server={server}, ip={ip}, port={port}");
             db.SetConnectionString(server, ip, port);
         }
 
@@ -170,7 +171,7 @@ ClientName
 from CDBEventJournal
 where (RecordTime between {{ts '{starttime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}} and {{ts '{endtime.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss")}'}})";
 
-            logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetEventJournalAsync, starttime={starttime}, endtime={endtime}, sql={sql}");
+            logger?.LogTrace($"Citect.AlarmDriver.AlarmDbService > GetEventJournalAsync, starttime={starttime}, endtime={endtime}, sql={sql}");
             var events = await db.QueryAsync<Event>(sql);
             logger?.LogDebug($"Citect.AlarmDriver.AlarmDbService > GetEventJournalAsync, starttime={starttime}, endtime={endtime}, sql={sql}, events.Count={events.Count()}");
 
