@@ -52,14 +52,16 @@ namespace Citect.AlarmDriver
         public AlarmDbService(IConfiguration config, ILogger<AlarmDbService> logger)
         {
             this.logger = logger;
-            
-            if (!int.TryParse(config["Citect:AlarmDbConnection:Port"], out var port))
-                port = 5482;
-            
-            db.SetConnectionString(
-                server: config["Citect:AlarmDbConnection:Server"],
-                ip: config["Citect:AlarmDbConnection:Ip"],
-                port: port);
+
+            var server = config["Citect:AlarmDbConnection:Server"];
+            var ip = config["Citect:AlarmDbConnection:Ip"];
+            if (!string.IsNullOrEmpty(server) & !string.IsNullOrEmpty(ip))
+            {
+                if (!int.TryParse(config["Citect:AlarmDbConnection:Port"], out var port))
+                    port = 5482;
+
+                db.SetConnectionString(server, ip, port);
+            }
         }
 
         /// <summary>

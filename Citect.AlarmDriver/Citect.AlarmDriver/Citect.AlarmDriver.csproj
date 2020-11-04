@@ -8,7 +8,7 @@
     <Description>Citect Alarm database services</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/estradege/citect</PackageProjectUrl>
-    <Version>1.1.5</Version>
+    <Version>1.1.6</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
