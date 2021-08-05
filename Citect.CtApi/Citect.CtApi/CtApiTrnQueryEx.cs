@@ -173,12 +173,20 @@ namespace Citect
         /// <returns></returns>
         private static IEnumerable<TrnData> ToTrnData(IEnumerable<Dictionary<string, string>> data)
         {
-            return data.ToList().Select(x => new TrnData
+            return data.ToList().Select(x =>
             {
-                DateTimeSeconds = Convert.ToInt64(x["DATETIME"]),
-                DateTimeMSeconds = Convert.ToInt32(x["MSECONDS"]),
-                Value = Convert.ToDouble(x["VALUE"]),
-                Quality = Convert.ToInt32(x["QUALITY"]),
+                if (!double.TryParse(x["VALUE"], out var value))
+                {
+                    value = double.NaN;
+                }
+
+                return new TrnData
+                {
+                    DateTimeSeconds = Convert.ToInt64(x["DATETIME"]),
+                    DateTimeMSeconds = Convert.ToInt32(x["MSECONDS"]),
+                    Value = value,
+                    Quality = Convert.ToInt32(x["QUALITY"]),
+                };
             });
         }
     }

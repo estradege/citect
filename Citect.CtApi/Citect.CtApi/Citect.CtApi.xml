@@ -97,12 +97,12 @@
             <param name="dwType">The desired return type.</param>
             <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
         </member>
-        <member name="F:Citect.CtApi.hCtapi">
+        <member name="F:Citect.CtApi._ctapi">
             <summary>
             Handle of ctapi connection
             </summary>
         </member>
-        <member name="F:Citect.CtApi.logger">
+        <member name="F:Citect.CtApi._logger">
             <summary>
             Looging service
             </summary>
