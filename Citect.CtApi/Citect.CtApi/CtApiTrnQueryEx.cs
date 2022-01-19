@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -194,6 +195,7 @@ namespace Citect
     /// <summary>
     /// The following properties are returned for each data record of the query.
     /// </summary>
+    [DebuggerDisplay("{DateTime}")]
     public class TrnData
     {
         /// <summary>
