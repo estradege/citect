@@ -14,6 +14,14 @@ namespace Citect
     public class CtApi : IDisposable
     {
         /// <summary>
+        /// Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
+        /// </summary>
+        /// <param name="sPath"></param>
+        /// <returns></returns>
+        [DllImport("CtApi.dll", EntryPoint = "ctSetManagedBinDirectory", SetLastError = true)]
+        private static extern bool ctSetManagedBinDirectory(string sPath);
+
+        /// <summary>
         /// Opens a connection to the Citect SCADA API.
         /// </summary>
         /// <param name="sComputer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name.</param>
@@ -196,12 +204,14 @@ namespace Citect
         /// <exception cref="Win32Exception"></exception>
         public void Open(string computer, string user, string password)
         {
+            SetManagedBinDirectory();
+
             if (_ctapi != IntPtr.Zero)
             {
                 Close();
             }
-            
-            _logger?.LogInformation($"Citect.CtApi > Open, computer={computer}, user={user}");           
+
+            _logger?.LogInformation($"Citect.CtApi > Open, computer={computer}, user={user}");
             _ctapi = CtOpen(computer, user, password, 0);
             
             if (_ctapi == IntPtr.Zero)
@@ -407,6 +417,26 @@ namespace Citect
             {
                 _logger?.LogTrace($"Citect.CtApi > GetProperty, propertyName={propertyName}, propertyValue={pData}");
                 return pData.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
+        /// </summary>
+        private void SetManagedBinDirectory()
+        {
+            try
+            {
+                var path = @"C:\ProgramData\CitectCtApi";
+
+                _logger?.LogInformation($"Citect.CtApi > SetManagedBinDirectory, path={path}");
+                var result = ctSetManagedBinDirectory(path);
+                _logger?.LogInformation($"Citect.CtApi > SetManagedBinDirectory, path={path}, result={result}");
+            }
+            catch (Exception e)
+            {
+                _logger?.LogWarning($"Citect.CtApi > SetManagedBinDirectory, error={e.Message}");
+                _logger?.LogTrace($"Citect.CtApi > SetManagedBinDirectory, error={e}");
             }
         }
     }

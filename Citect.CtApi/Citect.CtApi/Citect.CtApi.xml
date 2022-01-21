@@ -9,6 +9,13 @@
             Citect ctapi wrapper
             </summary>
         </member>
+        <member name="M:Citect.CtApi.ctSetManagedBinDirectory(System.String)">
+            <summary>
+            Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
+            </summary>
+            <param name="sPath"></param>
+            <returns></returns>
+        </member>
         <member name="M:Citect.CtApi.CtOpen(System.String,System.String,System.String,System.UInt32)">
             <summary>
             Opens a connection to the Citect SCADA API.
@@ -234,6 +241,11 @@
             <param name="hfindptr">Handle to the search, as returned by ctFindFirst().</param>
             <param name="propertyName">The name of the property to be retrieved.</param>
             <returns>The property value.</returns>
+        </member>
+        <member name="M:Citect.CtApi.SetManagedBinDirectory">
+            <summary>
+            Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
+            </summary>
         </member>
         <member name="T:Citect.CtApiAlarmEx">
             <summary>
