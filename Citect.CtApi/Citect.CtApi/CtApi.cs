@@ -395,7 +395,7 @@ namespace Citect
             _logger?.LogDebug($"Citect.CtApi > ListNew, dwMode={dwMode}");
 
             var result = CtListNew(_ctapi, dwMode);
-            if (result == null)
+            if (result == IntPtr.Zero)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
                 _logger?.LogError($"Citect.CtApi > ListNew, dwMode={dwMode}, error={error.Message}");
@@ -472,7 +472,7 @@ namespace Citect
             _logger?.LogDebug($"Citect.CtApi > ListAdd, hList={hList}, sTag={sTag}");
 
             var result = CtListAdd(hList,sTag);
-            if (result == null)
+            if (result == IntPtr.Zero)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
                 _logger?.LogError($"Citect.CtApi > ListAdd hList={hList}, sTag={sTag}, error={error.Message}");
@@ -497,7 +497,7 @@ namespace Citect
             _logger?.LogDebug($"Citect.CtApi > ListAddEx, hList={hList}, sTag={sTag}, bRaw={bRaw}, nPollPeriodMS={nPollPeriodMS}, dDeadband={dDeadband}");
 
             var result = CtListAdd(hList,sTag);
-            if (result == null)
+            if (result == IntPtr.Zero)
             {
                 var error = new Win32Exception(Marshal.GetLastWin32Error());
                 _logger?.LogError($"Citect.CtApi > ListAddEx hList={hList}, sTag={sTag}, bRaw={bRaw}, nPollPeriodMS={nPollPeriodMS}, dDeadband={dDeadband}, error={error.Message}");
