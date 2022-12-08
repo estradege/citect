@@ -9,49 +9,6 @@
             Citect ctapi wrapper
             </summary>
         </member>
-        <member name="M:Citect.CtApi.ctSetManagedBinDirectory(System.String)">
-            <summary>
-            Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
-            </summary>
-            <param name="sPath"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Citect.CtApi.CtOpen(System.String,System.String,System.String,System.UInt32)">
-            <summary>
-            Opens a connection to the Citect SCADA API.
-            </summary>
-            <param name="sComputer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name.</param>
-            <param name="sUser">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
-            <param name="sPassword">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
-            <param name="nMode">The mode of the Cicode call. Set this to 0 (zero).</param>
-            <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. Use GetLastError() to get extended error information.</returns>
-        </member>
-        <member name="M:Citect.CtApi.CtClose(System.IntPtr)">
-            <summary>
-            Closes a connection to the Citect SCADA API.
-            </summary>
-            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
-            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
-        </member>
-        <member name="M:Citect.CtApi.CtTagRead(System.IntPtr,System.String,System.Text.StringBuilder,System.Int32)">
-            <summary>
-            Reads the current value from the given I/O Device variable tag.
-            </summary>
-            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
-            <param name="sTag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
-            <param name="sValue">The buffer to store the read data. The data is returned in string format.</param>
-            <param name="dwLength">The length of the read buffer. If the data is bigger than the dwLength, the function will not succeed.</param>
-            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
-        </member>
-        <member name="M:Citect.CtApi.CtTagWrite(System.IntPtr,System.String,System.String)">
-            <summary>
-            Writes the given value to the I/O Device variable tag.
-            </summary>
-            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
-            <param name="sTag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
-            <param name="sValue">The value to write to the tag as a string.</param>
-            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
-        </member>
         <member name="M:Citect.CtApi.CtCicode(System.IntPtr,System.String,System.UInt32,System.UInt32,System.Text.StringBuilder,System.Int32,System.IntPtr)">
             <summary>
             Executes a Cicode function.
@@ -64,6 +21,20 @@
             <param name="dwLength">The length of the sResult buffer. If the result of the Cicode function is longer than the this number, then the result is not returned and the function call does not succeed, however the Cicode function is still executed. If the sResult is NULL then this length needs to be 0.</param>
             <param name="pctOverlapped">CTOVERLAPPED structure. This structure is used to control the overlapped notification. Set to NULL if you want a synchronous function call.</param>
             <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtClose(System.IntPtr)">
+            <summary>
+            Closes a connection to the Citect SCADA API.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtFindClose(System.IntPtr)">
+            <summary>
+            Closes a search initiated by ctFindFirst().
+            </summary>
+            <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
+            <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
         </member>
         <member name="M:Citect.CtApi.CtFindFirstEx(System.IntPtr,System.String,System.String,System.String,System.IntPtr@,System.Int32)">
             <summary>
@@ -85,13 +56,6 @@
             <param name="pObjHnd">The pointer to the found object handle. This is used to retrieve the properties.</param>
             <returns>If the function succeeds, the return value is TRUE (1). If the function does not succeed, the return value is FALSE (0). To get extended error information, call GetLastError()</returns>
         </member>
-        <member name="M:Citect.CtApi.CtFindClose(System.IntPtr)">
-            <summary>
-            Closes a search initiated by ctFindFirst().
-            </summary>
-            <param name="hnd">Handle to the search, as returned by ctFindFirst().</param>
-            <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
-        </member>
         <member name="M:Citect.CtApi.CtGetProperty(System.IntPtr,System.String,System.Text.StringBuilder,System.UInt32,System.UIntPtr@,System.UInt32)">
             <summary>
             Retrieves an object property.
@@ -103,6 +67,111 @@
             <param name="dwResultLength">Length of returned result. You can pass NULL if you want to ignore this parameter.</param>
             <param name="dwType">The desired return type.</param>
             <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListAdd(System.IntPtr,System.String)">
+            <summary>Adds a tag to the list.</summary>
+            <param name="hList">The handle to the list, as returned from ctListNew().</param>
+            <param name="sTag">The tag or tag name and element name, separated by a dot to be added to the list. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference.</param>
+            <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListAddEx(System.IntPtr,System.String,System.Boolean,System.Int32,System.Double)">
+            <summary>Adds a tag to the list with a specified poll period.</summary>
+            <param name="hList">The handle to the list, as returned from ctListNew().</param>
+            <param name="sTag">The tag or tag name and element name, separated by a dot to be added to the list. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference.</param>
+            <param name="bRaw">Specifies whether to subscribe to the given tag in the list using raw mode if TRUE or engineering mode if FALSE.</param>
+            <param name="nPollPeriodMS">Dictates the poll period used in the subscription made for the tag (in milliseconds).</param>
+            <param name="dDeadband">Percentage of the variable tag's engineering range that a tag needs to change by in order for an update to be sent through the system. A value of -1.0 indicates that the default deadband specified by the tag definition is to be used.</param>
+            <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListData(System.IntPtr,System.Text.StringBuilder,System.Int32,System.UInt32)">
+            <summary>Gets the value of a tag on the list.</summary>
+            <param name="hTag">The handle to the tag, as returned from ctListAdd().</param>
+            <param name="pBuffer">Pointer to a buffer to return the data. The data is returned scaled and as a formatted string.</param>
+            <param name="dwLength">Length (in bytes) of the raw data buffer.</param>
+            <param name="dwMode"> Mode of the data.</param>
+            <returns>If the function succeeds, the return value is TRUE. If the function does not succeed, the return value is FALSE. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListDelete(System.IntPtr)">
+            <summary>Frees a tag created with ctListAdd().</summary>
+            <param name="hTag">The handle to the tag, as returned from ctListAdd().</param>
+            <returns>If the function succeeds, the return value is TRUE. If the function does not succeed, the return value is FALSE. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListEvent(System.IntPtr,System.Int32)">
+            <summary>Returns the elements in the list which have changed state since they were last read using the ctListRead() function.</summary>
+            <param name="hList">The handle to the CTAPI as returned from ctListNew().</param>
+            <param name="dwMode">The mode of the list event.</param>
+            <returns>If the function succeeds, the return value specifies a handle to a tag which has changed state since the last time ctListRead was called. If the function does not succeed or there are no changes, the return value is NULL. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListFree(System.IntPtr)">
+            <summary>Frees a list created with ctListNew().</summary>
+            <param name="hList">The handle to the list, as returned from ctListNew().</param>
+            <returns>If the function succeeds, the return value is TRUE. If the function does not succeed, the return value is FALSE. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListItem(System.IntPtr,System.Int32,System.Text.StringBuilder,System.Int32,System.UInt32)">
+            <summary>Gets the tag element item data.</summary>
+            <param name="hTag">The handle to the tag, as returned from ctListAdd().</param>
+            <param name="dwItem">The tag element item.</param>
+            <param name="pBuffer">Pointer to a buffer to return the data. The data is returned scaled and as a formatted string.</param>
+            <param name="dwLength">Length (in bytes) of the raw data buffer.</param>
+            <param name="dwMode">Mode of the data.</param>    
+            <returns>If the function succeeds, the return value is TRUE. If the function does not succeed, the return value is FALSE. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListNew(System.IntPtr,System.UInt32)">
+            <summary>
+            Creates a new list.
+            </summary>
+            <param name="hnd">The handle to the CTAPI as returned from ctOpen().</param>
+            <param name="dwMode">The mode of the list creation.</param>
+            <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListRead(System.IntPtr,System.IntPtr)">
+            <summary>Reads every tag on the list.</summary>
+            <param name="hList">The handle to the list, as returned from ctListNew().</param>
+            <param name="pctOverlapped">CTOVERLAPPED structure. This structure is used to control the overlapped notification. Set to NULL if you want a synchronous function call.</param>
+            <returns>If the function succeeds, the return value is TRUE. If the function does not succeed, the return value is FALSE. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtListWrite(System.IntPtr,System.String,System.IntPtr)">
+            <summary>Writes to a single tag on the list.</summary>
+            <param name="hTag">The handle to the tag, as returned from ctListAdd().</param>
+            <param name="sValue">The value to write to the tag as a string. The value will be converted and scaled into the correct format to write to the tag.</param>
+            <param name="pctOverlapped">CTOVERLAPPED structure. This structure is used to control the overlapped notification. Set to NULL if you want a synchronous function call.</param>
+            <returns>If the function succeeds, the return value is TRUE. If the function does not succeed, the return value is FALSE. To get extended error information, call GetLastError().</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtOpen(System.String,System.String,System.String,System.UInt32)">
+            <summary>
+            Opens a connection to the Citect SCADA API.
+            </summary>
+            <param name="sComputer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name.</param>
+            <param name="sUser">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
+            <param name="sPassword">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+            <param name="nMode">The mode of the Cicode call. Set this to 0 (zero).</param>
+            <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtSetManagedBinDirectory(System.String)">
+            <summary>
+            Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
+            </summary>
+            <param name="sPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApi.CtTagRead(System.IntPtr,System.String,System.Text.StringBuilder,System.Int32)">
+            <summary>
+            Reads the current value from the given I/O Device variable tag.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <param name="sTag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <param name="sValue">The buffer to store the read data. The data is returned in string format.</param>
+            <param name="dwLength">The length of the read buffer. If the data is bigger than the dwLength, the function will not succeed.</param>
+            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
+        </member>
+        <member name="M:Citect.CtApi.CtTagWrite(System.IntPtr,System.String,System.String)">
+            <summary>
+            Writes the given value to the I/O Device variable tag.
+            </summary>
+            <param name="hCTAPI">The handle to the CTAPI as returned from ctOpen().</param>
+            <param name="sTag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
+            <param name="sValue">The value to write to the tag as a string.</param>
+            <returns>TRUE if successful, otherwise FALSE. Use GetLastError() to get extended error information.</returns>
         </member>
         <member name="F:Citect.CtApi._ctapi">
             <summary>
@@ -134,6 +203,123 @@
             Dispose the Citect ctapi wrapper and close the connection
             </summary>
         </member>
+        <member name="M:Citect.CtApi.CicodeAsync(System.String,System.UInt32)">
+            <summary>
+            Executes a Cicode function.
+            </summary>
+            <param name="cmd">The command to execute.</param>
+            <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.Cicode(System.String,System.UInt32)">
+            <summary>
+            Executes a Cicode function.
+            </summary>
+            <param name="cmd">The command to execute.</param>
+            <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.Close">
+            <summary>
+            Closes a connection to the Citect SCADA API.
+            </summary>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.FindAsync(System.String,System.String,System.String,System.String[])">
+            <summary>
+            Searches objects in the specified database which satisfies the filter string specified by cluster.
+            </summary>
+            <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
+            <param name="filter">Filter criteria.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <param name="propertiesName">The name of the properties to be retrieved.</param>
+        </member>
+        <member name="M:Citect.CtApi.Find(System.String,System.String,System.String,System.String[])">
+            <summary>
+            Searches objects in the specified database which satisfies the filter string specified by cluster.
+            </summary>
+            <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
+            <param name="filter">Filter criteria.</param>
+            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
+            <param name="propertiesName">The name of the properties to be retrieved.</param>
+        </member>
+        <member name="M:Citect.CtApi.GetProperty(System.IntPtr,System.String)">
+            <summary>
+            Retrieves an object property.
+            </summary>
+            <param name="hfindptr">Handle to the search, as returned by ctFindFirst().</param>
+            <param name="propertyName">The name of the property to be retrieved.</param>
+            <returns>The property value.</returns>
+        </member>
+        <member name="M:Citect.CtApi.ListAdd(System.IntPtr,System.String)">
+            <summary>Adds a tag to the list.</summary>
+            <param name="list">The handle to the list, as returned from ctListNew().</param>
+            <param name="tag">The tag or tag name and element name, separated by a dot to be added to the list. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference.</param>
+            <returns>If the function succeeds, the return value specifies a handle.</returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListAddEx(System.IntPtr,System.String,System.Boolean,System.Int32,System.Double)">
+            <summary>Adds a tag to the list with a specified poll period.</summary>
+            <param name="list">The handle to the list, as returned from ctListNew().</param>
+            <param name="tag">The tag or tag name and element name, separated by a dot to be added to the list. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference.</param>
+            <param name="raw">Specifies whether to subscribe to the given tag in the list using raw mode if TRUE or engineering mode if FALSE.</param>
+            <param name="pollPeriodMS">Dictates the poll period used in the subscription made for the tag (in milliseconds).</param>
+            <param name="deadband">Percentage of the variable tag's engineering range that a tag needs to change by in order for an update to be sent through the system. A value of -1.0 indicates that the default deadband specified by the tag definition is to be used.</param>
+            <returns>If the function succeeds, the return value specifies a handle.</returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListData(System.IntPtr,System.UInt32)">
+            <summary>Gets the value of a tag on the list.</summary>
+            <param name="tag">The handle to the tag, as returned from ctListAdd().</param>
+            <param name="mode"> Mode of the data.</param>
+            <returns>If the function succeeds, the return value specifies the value of the tag on the list.</returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListDelete(System.IntPtr)">
+            <summary>Frees a tag created with ctListAdd().</summary>
+            <param name="tag">The handle to the tag, as returned from ctListAdd().</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListEvent(System.IntPtr,System.Int32)">
+            <summary>Returns the elements in the list which have changed state since they were last read using the ctListRead() function.</summary>
+            <param name="list">The handle to the CTAPI as returned from ctListNew().</param>
+            <param name="mode">The mode of the list event.</param>
+            <returns>If the function succeeds, the return value specifies a handle to a tag which has changed state since the last time ctListRead was called. If the function does not succeed or there are no changes, the return value is NULL.</returns>
+        </member>
+        <member name="M:Citect.CtApi.ListFree(System.IntPtr)">
+            <summary>Frees a list created with ctListNew().</summary>
+            <param name="list">The handle to the list, as returned from ctListNew().</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListItem(System.IntPtr,System.Int32,System.UInt32)">
+            <summary>Gets the tag element item data.</summary>
+            <param name="tag">The handle to the tag, as returned from ctListAdd().</param>
+            <param name="item">The tag element item.</param>
+            <param name="mode">Mode of the data.</param>    
+            <returns>If the function succeeds, the return value is the tag element item data.</returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListNew(System.UInt32)">
+            <summary>
+            Creates a new list.
+            </summary>
+            <param name="mode">The mode of the list creation.</param>
+            <returns>If the function succeeds, the return value specifies a handle.</returns>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListRead(System.IntPtr,System.IntPtr)">
+            <summary>Reads every tag on the list.</summary>
+            <param name="list">The handle to the list, as returned from ctListNew().</param>
+            <param name="ctOverlapped">CTOVERLAPPED structure. This structure is used to control the overlapped notification. Set to NULL if you want a synchronous function call.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
+        <member name="M:Citect.CtApi.ListWrite(System.IntPtr,System.String,System.IntPtr)">
+            <summary>Writes to a single tag on the list.</summary>
+            <param name="tag">The handle to the tag, as returned from ctListAdd().</param>
+            <param name="value">The value to write to the tag as a string. The value will be converted and scaled into the correct format to write to the tag.</param>
+            <param name="ctOverlapped">CTOVERLAPPED structure. This structure is used to control the overlapped notification. Set to NULL if you want a synchronous function call.</param>
+            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
+        </member>
         <member name="M:Citect.CtApi.OpenAsync">
             <summary>
             Open the connection
@@ -164,11 +350,10 @@
             <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
             <exception cref="T:System.ComponentModel.Win32Exception"></exception>
         </member>
-        <member name="M:Citect.CtApi.Close">
+        <member name="M:Citect.CtApi.SetManagedBinDirectory">
             <summary>
-            Closes a connection to the Citect SCADA API.
+            Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
             </summary>
-            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
         </member>
         <member name="M:Citect.CtApi.TagReadAsync(System.String)">
             <summary>
@@ -199,53 +384,6 @@
             <param name="tag">The tag name or tag name and element name, separated by a dot. If the element name is not specified, it will be resolved at runtime as for an unqualified tag reference. You may use the array syntax [] to select an element of an array.</param>
             <param name="value">The value to write to the tag as a string.</param>
             <exception cref="T:System.ComponentModel.Win32Exception"></exception>
-        </member>
-        <member name="M:Citect.CtApi.CicodeAsync(System.String,System.UInt32)">
-            <summary>
-            Executes a Cicode function.
-            </summary>
-            <param name="cmd">The command to execute.</param>
-            <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
-            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
-        </member>
-        <member name="M:Citect.CtApi.Cicode(System.String,System.UInt32)">
-            <summary>
-            Executes a Cicode function.
-            </summary>
-            <param name="cmd">The command to execute.</param>
-            <param name="win">The Citect SCADA window to execute the function. This is a logical Citect SCADA window (0, 1, 2, 3 etc.) not a Windows Handle.</param>
-            <exception cref="T:System.ComponentModel.Win32Exception"></exception>
-        </member>
-        <member name="M:Citect.CtApi.FindAsync(System.String,System.String,System.String,System.String[])">
-            <summary>
-            Searches objects in the specified database which satisfies the filter string specified by cluster.
-            </summary>
-            <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
-            <param name="filter">Filter criteria.</param>
-            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
-            <param name="propertiesName">The name of the properties to be retrieved.</param>
-        </member>
-        <member name="M:Citect.CtApi.Find(System.String,System.String,System.String,System.String[])">
-            <summary>
-            Searches objects in the specified database which satisfies the filter string specified by cluster.
-            </summary>
-            <param name="tableName">The table, device, trend, or alarm data to be searched.</param>
-            <param name="filter">Filter criteria.</param>
-            <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
-            <param name="propertiesName">The name of the properties to be retrieved.</param>
-        </member>
-        <member name="M:Citect.CtApi.GetProperty(System.IntPtr,System.String)">
-            <summary>
-            Retrieves an object property.
-            </summary>
-            <param name="hfindptr">Handle to the search, as returned by ctFindFirst().</param>
-            <param name="propertyName">The name of the property to be retrieved.</param>
-            <returns>The property value.</returns>
-        </member>
-        <member name="M:Citect.CtApi.SetManagedBinDirectory">
-            <summary>
-            Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
-            </summary>
         </member>
         <member name="T:Citect.CtApiAlarmEx">
             <summary>
