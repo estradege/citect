@@ -408,9 +408,27 @@
             <param name="clusterName">The cluster where the tag resides</param>
             <returns>0 (zero) if successful, otherwise an error code will return</returns>
         </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmAckTags(Citect.CtApi,System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Acknowledge a specified alarms list.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tags">A list that identifies the alarms to acknowledge</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmAckTagsAsync(Citect.CtApi,System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Acknowledge a specified alarms list.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tags">A list that identifies the alarms to acknowledge</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
         <member name="M:Citect.CtApiAlarmEx.AlarmDisableTag(Citect.CtApi,System.String,System.String)">
             <summary>
-            Disables alarms by tag name.
+            Disable a specified alarm.
             </summary>
             <param name="ctApi"></param>
             <param name="tag">A string that identifies the alarm to disable</param>
@@ -419,16 +437,34 @@
         </member>
         <member name="M:Citect.CtApiAlarmEx.AlarmDisableTagAsync(Citect.CtApi,System.String,System.String)">
             <summary>
-            Disables alarms by tag name.
+            Disable a specified alarm.
             </summary>
             <param name="ctApi"></param>
             <param name="tag">A string that identifies the alarm to disable</param>
             <param name="clusterName">The cluster where the tag resides</param>
             <returns>0 (zero) if successful, otherwise an error code will return</returns>
         </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmDisableTags(Citect.CtApi,System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Disable a specified alarms list.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tags">A list that identifies the alarm to disable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmDisableTagsAsync(Citect.CtApi,System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Disable a specified alarms list.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tags">A list that identifies the alarm to disable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
         <member name="M:Citect.CtApiAlarmEx.AlarmEnableTag(Citect.CtApi,System.String,System.String)">
             <summary>
-            Enables alarms by tag name.
+            Enable a specified alarm.
             </summary>
             <param name="ctApi"></param>
             <param name="tag">A string that identifies the alarm to enable</param>
@@ -437,10 +473,28 @@
         </member>
         <member name="M:Citect.CtApiAlarmEx.AlarmEnableTagAsync(Citect.CtApi,System.String,System.String)">
             <summary>
-            Enables alarms by tag name.
+            Enable a specified alarm.
             </summary>
             <param name="ctApi"></param>
             <param name="tag">A string that identifies the alarm to enable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmEnableTags(Citect.CtApi,System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Enable a specified alarms list.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tags">A list that identifies the alarm to enable</param>
+            <param name="clusterName">The cluster where the tag resides</param>
+            <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="M:Citect.CtApiAlarmEx.AlarmEnableTagsAsync(Citect.CtApi,System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Enable a specified alarms list.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="tags">A list that identifies the alarm to enable</param>
             <param name="clusterName">The cluster where the tag resides</param>
             <returns>0 (zero) if successful, otherwise an error code will return</returns>
         </member>
@@ -495,6 +549,109 @@
             <param name="page">The name or page number of the page to display.</param>
             <param name="clusterName">The name of the cluster that will accommodate the page at runtime.</param>
             <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        </member>
+        <member name="T:Citect.CtApiSecutityEx">
+            <summary>
+            Extension methods wrapping cicode security functions
+            </summary>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.GetPriv(Citect.CtApi,System.Int32,System.Int32)">
+            <summary>
+            Checks the privilege and area of the current operator.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="priv">The privilege level (1..8).</param>
+            <param name="area">The area of privilege (0..255).</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.GetPrivAsync(Citect.CtApi,System.Int32,System.Int32)">
+            <summary>
+            Checks the privilege and area of the current operator.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="priv">The privilege level (1..8).</param>
+            <param name="area">The area of privilege (0..255).</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.Login(Citect.CtApi,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Logs an operator into the Plant SCADA system. Not available when logged in as Windows user.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="userName">The user's name, as defined in the Users database.</param>
+            <param name="password">The user's password, as defined in the Users database.</param>
+            <param name="sync">Specifies whether the function operates in blocking mode.</param>
+            <param name="language">The user's language.</param>
+            <returns>0 (zero) if successful</returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.LoginAsync(Citect.CtApi,System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Logs an operator into the Plant SCADA system. Not available when logged in as Windows user.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="userName">The user's name, as defined in the Users database.</param>
+            <param name="password">The user's password, as defined in the Users database.</param>
+            <param name="sync">Specifies whether the function operates in blocking mode.</param>
+            <param name="language">The user's language.</param>
+            <returns>0 (zero) if successful</returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfo(Citect.CtApi,System.Int32)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="type">The type of user information.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfoAsync(Citect.CtApi,System.Int32)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <param name="type">The type of user information.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfoIsLogin(Citect.CtApi)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfoIsLoginAsync(Citect.CtApi)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfoGetName(Citect.CtApi)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfoGetNameAsync(Citect.CtApi)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfoGetFullName(Citect.CtApi)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Citect.CtApiSecutityEx.UserInfoGetFullNameAsync(Citect.CtApi)">
+            <summary>
+            Gets information about the operator who is currently logged-in to the system.
+            </summary>
+            <param name="ctApi"></param>
+            <returns></returns>
         </member>
         <member name="T:Citect.CtApiTrnQueryEx">
             <summary>

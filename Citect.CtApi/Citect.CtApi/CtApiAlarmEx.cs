@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Citect
@@ -37,7 +35,53 @@ namespace Citect
         }
 
         /// <summary>
-        /// Disables alarms by tag name.
+        /// Acknowledge a specified alarms list.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="tags">A list that identifies the alarms to acknowledge</param>
+        /// <param name="clusterName">The cluster where the tag resides</param>
+        /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        public static string AlarmAckTags(this CtApi ctApi, IEnumerable<string> tags, string clusterName = "")
+        {
+            var result = "0";
+
+            foreach (var tag in tags)
+            {
+                var cicodeResult = ctApi.Cicode($"AlarmAckTag({tag}, {clusterName})");
+                if (cicodeResult != "0")
+                {
+                    result = cicodeResult;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Acknowledge a specified alarms list.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="tags">A list that identifies the alarms to acknowledge</param>
+        /// <param name="clusterName">The cluster where the tag resides</param>
+        /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        public static async Task<string> AlarmAckTagsAsync(this CtApi ctApi, IEnumerable<string> tags, string clusterName = "")
+        {
+            var result = "0";
+
+            foreach (var tag in tags)
+            {
+                var cicodeResult = await ctApi.CicodeAsync($"AlarmAckTag({tag}, {clusterName})");
+                if (cicodeResult != "0")
+                {
+                    result = cicodeResult;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Disable a specified alarm.
         /// </summary>
         /// <param name="ctApi"></param>
         /// <param name="tag">A string that identifies the alarm to disable</param>
@@ -50,7 +94,7 @@ namespace Citect
         }
 
         /// <summary>
-        /// Disables alarms by tag name.
+        /// Disable a specified alarm.
         /// </summary>
         /// <param name="ctApi"></param>
         /// <param name="tag">A string that identifies the alarm to disable</param>
@@ -63,7 +107,53 @@ namespace Citect
         }
 
         /// <summary>
-        /// Enables alarms by tag name.
+        /// Disable a specified alarms list.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="tags">A list that identifies the alarm to disable</param>
+        /// <param name="clusterName">The cluster where the tag resides</param>
+        /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        public static string AlarmDisableTags(this CtApi ctApi, IEnumerable<string> tags, string clusterName = "")
+        {
+            var result = "0";
+
+            foreach (var tag in tags)
+            {
+                var cicodeResult = ctApi.Cicode($"AlarmDisableTag({tag}, {clusterName})");
+                if (cicodeResult != "0")
+                {
+                    result = cicodeResult;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Disable a specified alarms list.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="tags">A list that identifies the alarm to disable</param>
+        /// <param name="clusterName">The cluster where the tag resides</param>
+        /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        public static async Task<string> AlarmDisableTagsAsync(this CtApi ctApi, IEnumerable<string> tags, string clusterName = "")
+        {
+            var result = "0";
+
+            foreach (var tag in tags)
+            {
+                var cicodeResult = await ctApi.CicodeAsync($"AlarmDisableTag({tag}, {clusterName})");
+                if (cicodeResult != "0")
+                {
+                    result = cicodeResult;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Enable a specified alarm.
         /// </summary>
         /// <param name="ctApi"></param>
         /// <param name="tag">A string that identifies the alarm to enable</param>
@@ -76,7 +166,7 @@ namespace Citect
         }
 
         /// <summary>
-        /// Enables alarms by tag name.
+        /// Enable a specified alarm.
         /// </summary>
         /// <param name="ctApi"></param>
         /// <param name="tag">A string that identifies the alarm to enable</param>
@@ -85,6 +175,52 @@ namespace Citect
         public static async Task<string> AlarmEnableTagAsync(this CtApi ctApi, string tag, string clusterName = "")
         {
             var result = await ctApi.CicodeAsync($"AlarmEnableTag({tag}, {clusterName})");
+            return result;
+        }
+
+        /// <summary>
+        /// Enable a specified alarms list.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="tags">A list that identifies the alarm to enable</param>
+        /// <param name="clusterName">The cluster where the tag resides</param>
+        /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        public static string AlarmEnableTags(this CtApi ctApi, IEnumerable<string> tags, string clusterName = "")
+        {
+            var result = "0";
+
+            foreach (var tag in tags)
+            {
+                var cicodeResult = ctApi.Cicode($"AlarmEnableTag({tag}, {clusterName})");
+                if (cicodeResult != "0")
+                {
+                    result = cicodeResult;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Enable a specified alarms list.
+        /// </summary>
+        /// <param name="ctApi"></param>
+        /// <param name="tags">A list that identifies the alarm to enable</param>
+        /// <param name="clusterName">The cluster where the tag resides</param>
+        /// <returns>0 (zero) if successful, otherwise an error code will return</returns>
+        public static async Task<string> AlarmEnableTagsAsync(this CtApi ctApi, IEnumerable<string> tags, string clusterName = "")
+        {
+            var result = "0";
+
+            foreach (var tag in tags)
+            {
+                var cicodeResult = await ctApi.CicodeAsync($"AlarmEnableTag({tag}, {clusterName})");
+                if (cicodeResult != "0")
+                {
+                    result = cicodeResult;
+                }
+            }
+
             return result;
         }
     }

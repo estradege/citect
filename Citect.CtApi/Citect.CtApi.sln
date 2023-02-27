@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citect.CtApi.ConsoleApp1", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.ConsoleApp48", "Citect.CtApi.ConsoleApp48\Citect.CtApi.ConsoleApp48.csproj", "{7398CE7B-D684-4CBB-BEA2-79B60E08577E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citect.CtApi.WinFormsApp1", "Citect.CtApi.WinFormsApp1\Citect.CtApi.WinFormsApp1.csproj", "{27C44055-1A21-4E0F-9286-179EF581D436}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7398CE7B-D684-4CBB-BEA2-79B60E08577E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7398CE7B-D684-4CBB-BEA2-79B60E08577E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7398CE7B-D684-4CBB-BEA2-79B60E08577E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27C44055-1A21-4E0F-9286-179EF581D436}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27C44055-1A21-4E0F-9286-179EF581D436}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27C44055-1A21-4E0F-9286-179EF581D436}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27C44055-1A21-4E0F-9286-179EF581D436}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
