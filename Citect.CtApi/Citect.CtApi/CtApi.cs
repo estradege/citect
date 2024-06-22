@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +43,7 @@ namespace Citect
         /// <returns>If the function succeeds, the return value is non-zero. If the function does not succeed, the return value is zero. To get extended error information, call GetLastError().</returns>
         [DllImport("CtApi.dll", EntryPoint = "ctFindClose", SetLastError = true)]
         private static extern bool CtFindClose(IntPtr hnd);
+        
         /// <summary>
         /// Searches for the first object in the specified database which satisfies the filter string specified by cluster.
         /// </summary>
@@ -162,7 +164,7 @@ namespace Citect
         /// <param name="sComputer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name.</param>
         /// <param name="sUser">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
         /// <param name="sPassword">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
-        /// <param name="nMode">The mode of the Cicode call. Set this to 0 (zero).</param>
+        /// <param name="nMode">The mode of the Cicode call.</param>
         /// <returns>If the function succeeds, the return value specifies a handle. If the function does not succeed, the return value is NULL. Use GetLastError() to get extended error information.</returns>
         [DllImport("CtApi.dll", EntryPoint = "ctOpen", SetLastError = true)]
         private static extern IntPtr CtOpen(string sComputer, string sUser, string sPassword, uint nMode);
@@ -170,7 +172,7 @@ namespace Citect
         /// <summary>
         /// Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
         /// </summary>
-        /// <param name="sPath"></param>
+        /// <param name="sPath">A path representing the location of the CTAPI managed dependencies.</param>
         /// <returns></returns>
         [DllImport("CtApi.dll", EntryPoint = "ctSetManagedBinDirectory", SetLastError = true)]
         private static extern bool CtSetManagedBinDirectory(string sPath);
@@ -219,17 +221,6 @@ namespace Citect
         public CtApi(ILogger<CtApi> logger)
         {
             _logger = logger;
-        }
-
-        /// <summary>
-        /// Create a new Citect ctapi wrapper
-        /// </summary>
-        public CtApi(bool open, string computer = "", string user = "", string password = "")
-        {
-            if (open)
-            {
-                Open(computer, user, password);
-            }
         }
 
         /// <summary>
@@ -599,15 +590,6 @@ namespace Citect
         /// <summary>
         /// Open the connection
         /// </summary>
-        /// <exception cref="Win32Exception"></exception>
-        public Task OpenAsync()
-        {
-            return Task.Run(() => Open());
-        }
-
-        /// <summary>
-        /// Open the connection
-        /// </summary>
         /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
         /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
         /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
@@ -620,30 +602,20 @@ namespace Citect
         /// <summary>
         /// Open the connection
         /// </summary>
-        /// <exception cref="Win32Exception"></exception>
-        public void Open()
-        {
-            Open(null, null, null);
-        }
-
-        /// <summary>
-        /// Open the connection
-        /// </summary>
         /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
         /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
         /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+        /// <param name="mode">The mode of the Cicode call.</param>
         /// <exception cref="Win32Exception"></exception>
-        public void Open(string computer, string user, string password)
+        public void Open(string computer = null, string user = null, string password = null, CtOpen? mode = null)
         {
-            SetManagedBinDirectory();
-
             if (_ctapi != IntPtr.Zero)
             {
                 Close();
             }
 
             _logger?.LogInformation($"Citect.CtApi > Open, computer={computer}, user={user}");
-            _ctapi = CtOpen(computer, user, password, 0);
+            _ctapi = CtOpen(computer, user, password, (uint)(mode ?? 0));
 
             if (_ctapi == IntPtr.Zero)
             {
@@ -654,16 +626,30 @@ namespace Citect
         }
 
         /// <summary>
+        /// Allows a CTAPI consumer to specify from where it will load all CTAPI dependencies (Include .NET managed dependencies).
+        /// </summary>
+        /// <param name="path">A path representing the location of the CTAPI managed dependencies.</param>
+        /// <returns></returns>
+        public void SetCtApiDirectory(string path)
+        {
+            _logger?.LogInformation($"Citect.CtApi > SetCtApiDirectory, path={path}");
+
+            var envPath = (string)Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process)["Path"];
+            var envPathArray = envPath?.Split(';') ?? Array.Empty<string>();
+            if (!envPathArray.Contains(path))
+            {
+                Environment.SetEnvironmentVariable("Path", $"{envPath};{path}", EnvironmentVariableTarget.Process);
+                SetManagedBinDirectory(path);
+            }
+        }
+
+        /// <summary>
         /// Allows a CTAPI consumer to specify from where it will load certain CTAPI dependencies (.NET managed dependencies).
         /// </summary>
-        private void SetManagedBinDirectory()
+        private void SetManagedBinDirectory(string path)
         {
             try
             {
-                var path = @"C:\ProgramData\CitectCtApi";
-
-                Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);    
-
                 _logger?.LogInformation($"Citect.CtApi > SetManagedBinDirectory, path={path}");
                 var result = CtSetManagedBinDirectory(path);
                 _logger?.LogInformation($"Citect.CtApi > SetManagedBinDirectory, path={path}, result={result}");

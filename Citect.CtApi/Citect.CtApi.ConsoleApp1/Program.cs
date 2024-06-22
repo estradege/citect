@@ -10,7 +10,9 @@ namespace ConsoleApp1
             try
             {
                 var ctApi = new CtApi();
-                ctApi.Open();
+                ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
+                ctApi.Open("127.0.0.1", "engineer", "Citect");
+
                 Console.WriteLine("connected");
                 ctApi.Close();
             }

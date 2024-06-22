@@ -67,5 +67,11 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Citect.CtApi\Citect.CtApi.csproj">
+      <Project>{70B18466-DE7B-4BDB-BB26-9E1F6DECBA72}</Project>
+      <Name>Citect.CtApi</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,28 +1,20 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using Citect;
+using System;
 
 namespace ConsoleApp48
 {
     internal class Program
     {
-        [DllImport("CtApi.dll", EntryPoint = "ctOpen", SetLastError = true)]
-        private static extern IntPtr CtOpen(string sComputer, string sUser, string sPassword, uint nMode);
-
-        [DllImport("CtApi.dll", EntryPoint = "ctClose", SetLastError = true)]
-        private static extern bool CtClose(IntPtr hCTAPI);
-
-        [DllImport("CtApi.dll", EntryPoint = "ctSetManagedBinDirectory", SetLastError = true)]
-        private static extern bool CtSetManagedBinDirectory(string sPath);
-
         static void Main(string[] args)
         {
-            var ctApi = IntPtr.Zero;
-
             try
             {
-                var result = CtSetManagedBinDirectory("C:\\ProgramData\\CitectCtApi");
-                ctApi = CtOpen(null, null, null, 0);
-                Console.WriteLine("Opened");
+                var ctApi = new CtApi();
+                ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
+                ctApi.Open("127.0.0.1", "engineer", "Citect");
+
+                Console.WriteLine("connected");
+                ctApi.Close();
             }
             catch (Exception e)
             {
@@ -33,8 +25,6 @@ namespace ConsoleApp48
             finally
             {
                 Console.ReadKey();
-                var result = CtClose(ctApi);
-                Console.WriteLine("Closed");
             }
         }
     }
