@@ -11,8 +11,8 @@ namespace ConsoleApp1
             {
                 var ctApi = new CtApi();
                 ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
-                ctApi.Open("127.0.0.1", "engineer", "Citect");
-
+                ctApi.Open();
+                var t = ctApi.TagRead("E_ANAMOTVALVE_0_Cmd");
                 Console.WriteLine("connected");
                 ctApi.Close();
             }
