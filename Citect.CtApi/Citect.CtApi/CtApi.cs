@@ -190,7 +190,7 @@ namespace Citect
 
 
         [DllImport("CtApi.dll", EntryPoint = "ctTagReadEx", SetLastError = true)]
-        private static extern bool CtTagReadEx(IntPtr hCTAPI, string sTag, StringBuilder sValue, int dwLength, ref object pctTagvalueItems);
+        private static extern bool CtTagReadEx(IntPtr hCTAPI, string sTag, StringBuilder sValue, int dwLength, ref CtTagValueItems pctTagvalueItems);
 
         /// <summary>
         /// Writes the given value to the I/O Device variable tag.
@@ -705,7 +705,7 @@ namespace Citect
             _logger?.LogDebug($"Citect.CtApi > TagReadEx, tag={tag}");
 
             var value = new StringBuilder(100);
-            var items = new object();
+            var items = new CtTagValueItems();
             var result = CtTagReadEx(_ctapi, tag, value, value.Capacity, ref items);
             if (result == false)
             {

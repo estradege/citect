@@ -13,7 +13,7 @@ namespace ConsoleApp1
                 {
                     ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
                     ctApi.Open();
-                    var myTag = ctApi.TagRead("E_ANAMOTVALVE_0_AUTHMODEii");
+                    //var myTag = ctApi.TagRead("E_ANAMOTVALVE_0_AUTHMODEii");
                     var myTag2 = ctApi.TagReadEx("E_ANAMOTVALVE_0_AUTHMODE");
                 }
                 catch (Exception e)
