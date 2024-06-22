@@ -7,32 +7,22 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            try
-            {
-                var ctApi = new CtApi();
-                ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
-                ctApi.Open();
-                var t = ctApi.TagRead("E_ANAMOTVALVE_0_Cmd");
-                Console.WriteLine("connected");
-                ctApi.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine();
-                Console.WriteLine(e.ToString());
-            }
-            finally
-            {
-                Console.ReadKey();
-            }
-
             using (var ctApi = new CtApi())
             {
-                ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
-                ctApi.Open();
-                ctApi.TagWrite("MyTagName", "MyTagValueAsString");
-                var myTag = ctApi.TagRead("MyTagName");
+                try
+                {
+                    ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
+                    ctApi.Open();
+                    var myTag = ctApi.TagRead("E_ANAMOTVALVE_0_AUTHMODEii");
+                    var myTag2 = ctApi.TagReadEx("E_ANAMOTVALVE_0_AUTHMODE");
+                }
+                catch (Exception e)
+                {
+                }
+                finally
+                {
+                    ctApi.Close(); 
+                }
             }
         }
     }

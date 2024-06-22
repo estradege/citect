@@ -188,6 +188,10 @@ namespace Citect
         [DllImport("CtApi.dll", EntryPoint = "ctTagRead", SetLastError = true)]
         private static extern bool CtTagRead(IntPtr hCTAPI, string sTag, StringBuilder sValue, int dwLength);
 
+
+        [DllImport("CtApi.dll", EntryPoint = "ctTagReadEx", SetLastError = true)]
+        private static extern bool CtTagReadEx(IntPtr hCTAPI, string sTag, StringBuilder sValue, int dwLength, ref object pctTagvalueItems);
+
         /// <summary>
         /// Writes the given value to the I/O Device variable tag.
         /// </summary>
@@ -593,10 +597,11 @@ namespace Citect
         /// <param name="computer">The computer you want to communicate with via CTAPI. For a local connection, specify NULL as the computer name. The Windows Computer Name is the name as specified in the Identification tab, under the Network section of the Windows Control Panel.</param>
         /// <param name="user">Your username as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. On a local computer, it is optional.</param>
         /// <param name="password">Your password as defined in the Citect SCADA project running on the computer you want to connect to. This argument is only necessary if you are calling this function from a remote computer. You need to use a non-blank password. On a local computer, it is optional.</param>
+        /// <param name="mode">The mode of the Cicode call.</param>
         /// <exception cref="Win32Exception"></exception>
-        public Task OpenAsync(string computer, string user, string password)
+        public Task OpenAsync(string computer = null, string user = null, string password = null, CtOpen? mode = null)
         {
-            return Task.Run(() => Open(computer, user, password));
+            return Task.Run(() => Open(computer, user, password, mode));
         }
 
         /// <summary>
@@ -691,6 +696,26 @@ namespace Citect
             else
             {
                 _logger?.LogDebug($"Citect.CtApi > TagRead, tag={tag}, value={value}");
+                return value.ToString();
+            }
+        }
+
+        public string TagReadEx(string tag)
+        {
+            _logger?.LogDebug($"Citect.CtApi > TagReadEx, tag={tag}");
+
+            var value = new StringBuilder(100);
+            var items = new object();
+            var result = CtTagReadEx(_ctapi, tag, value, value.Capacity, ref items);
+            if (result == false)
+            {
+                var error = new Win32Exception(Marshal.GetLastWin32Error());
+                _logger?.LogError($"Citect.CtApi > TagReadEx, tag={tag}, error={error.Message}");
+                throw error;
+            }
+            else
+            {
+                _logger?.LogDebug($"Citect.CtApi > TagReadEx, tag={tag}, value={value}");
                 return value.ToString();
             }
         }
