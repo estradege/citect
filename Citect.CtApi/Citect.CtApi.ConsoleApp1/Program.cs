@@ -26,6 +26,14 @@ namespace ConsoleApp1
             {
                 Console.ReadKey();
             }
+
+            using (var ctApi = new CtApi())
+            {
+                ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
+                ctApi.Open();
+                ctApi.TagWrite("MyTagName", "MyTagValueAsString");
+                var myTag = ctApi.TagRead("MyTagName");
+            }
         }
     }
 }

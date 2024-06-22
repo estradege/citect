@@ -1,5 +1,5 @@
 ﻿# Citect.CtApi
-*Toolkit over Citect SCADA software.* 
+*Citect (Plant SCADA) CtApi .NET.* 
 
 ## Versions
 

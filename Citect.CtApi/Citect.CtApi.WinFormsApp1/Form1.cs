@@ -11,7 +11,7 @@ namespace WinFormsApp1
             InitializeComponent();
 
             _ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
-            _ctApi.Open(mode: CtOpen.ReadOnly);
+            _ctApi.Open();
             //_ctApi.Open("127.0.0.1", "op", "op");
         }
 
