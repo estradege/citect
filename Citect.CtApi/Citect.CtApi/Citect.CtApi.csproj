@@ -7,9 +7,11 @@
     <PackageProjectUrl>https://github.com/estradege/citect</PackageProjectUrl>
     <Authors>Geoffrey Estrade</Authors>
     <Description>Citect SCADA CtApi .NET</Description>
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Title>$(AssemblyName)</Title>
+    <RepositoryUrl>https://github.com/estradege/citect</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -17,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,9 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Citect.CtApi.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
