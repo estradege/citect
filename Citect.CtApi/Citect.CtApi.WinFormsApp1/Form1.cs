@@ -32,5 +32,37 @@ namespace WinFormsApp1
                 result = ctapi.UserInfo(6);
             }
         }
+
+        private async void btGetPriv_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var ctapi = new CtApi())
+                {
+                    //ctapi.Open("127.0.0.1", "engineer", "Citect");
+                    //ctapi.Open("127.0.0.1", "AlarmViewer", "AlarmViewer");
+                    await ctapi.OpenAsync();
+                    var result = await ctapi.GetPrivAsync(1, 0);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var ctapi = new CtApi())
+                {
+                    ctapi.Open(null, null, null);
+                    var result = await ctapi.GetPrivAsync(1, 0);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

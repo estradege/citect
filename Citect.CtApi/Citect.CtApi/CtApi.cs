@@ -662,6 +662,8 @@ namespace Citect
             {
                 var path = @"C:\ProgramData\CitectCtApi";
 
+                Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);    
+
                 _logger?.LogInformation($"Citect.CtApi > SetManagedBinDirectory, path={path}");
                 var result = CtSetManagedBinDirectory(path);
                 _logger?.LogInformation($"Citect.CtApi > SetManagedBinDirectory, path={path}, result={result}");
