@@ -6,7 +6,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/estradege/citect</PackageProjectUrl>
     <Authors>Geoffrey Estrade</Authors>
-    <Description>Citect SCADA CtApi .NET</Description>
+    <Description>Citect (Plant SCADA) CtApi .NET</Description>
     <Version>2.1.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
