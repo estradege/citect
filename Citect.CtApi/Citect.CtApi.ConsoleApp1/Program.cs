@@ -1,5 +1,6 @@
 ﻿using Citect;
 using System;
+using System.Globalization;
 
 namespace ConsoleApp1
 {
@@ -7,14 +8,22 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            var ctApi = new CtApi();
+
             try
             {
-                var ctApi = new CtApi();
                 ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
-                ctApi.Open();
-                var t = ctApi.TagRead("E_ANAMOTVALVE_0_Cmd");
+                ctApi.Open("172.16.11.106", "Factory", "Factory");
                 Console.WriteLine("connected");
-                ctApi.Close();
+
+                var dspMode = DisplayMode.Get(Ordering.OldestToNewest, Condense.Mean, Stretch.Raw, 0, BadQuality.Zero, Raw.None);
+                var trn = ctApi.TrnQuery(DateTime.Now.AddMinutes(-1), DateTime.Now, 1, "IO_AI_EX_0_Out", dspMode, 1, "CITECT");
+
+                foreach (var t in trn)
+                {
+                    Console.WriteLine($"{t.DateTime} {t.Value} {t.Quality}");
+                }
+
             }
             catch (Exception e)
             {
@@ -24,15 +33,8 @@ namespace ConsoleApp1
             }
             finally
             {
-                Console.ReadKey();
-            }
-
-            using (var ctApi = new CtApi())
-            {
-                ctApi.SetCtApiDirectory(@"C:\Program Files (x86)\AVEVA Plant SCADA\Bin\Bin (x64)");
-                ctApi.Open();
-                ctApi.TagWrite("MyTagName", "MyTagValueAsString");
-                var myTag = ctApi.TagRead("MyTagName");
+                ctApi.Close();
+                Console.ReadLine();
             }
         }
     }

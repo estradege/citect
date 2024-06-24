@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Citect
@@ -13,6 +12,12 @@ namespace Citect
     /// </summary>
     public static class CtApiTrnQueryEx
     {
+        /// <summary>
+        /// Number format used by citect
+        /// </summary>
+        private static IFormatProvider _citectNumberFormat
+            = new NumberFormatInfo { NumberDecimalSeparator = "." };
+
         /// <summary>
         /// Search trend data.
         /// </summary>
@@ -30,8 +35,7 @@ namespace Citect
         /// <returns></returns>
         public static IEnumerable<TrnData> TrnQuery(this CtApi ctApi, long endtime, int endtimeMs, float period, int numSamples, string tagName, uint displayMode, int dataMode, int instantTrend, int samplePeriod, string cluster)
         {
-            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            var query = $"TRNQUERY,{endtime},{endtimeMs},{period.ToString(format)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var query = $"TRNQUERY,{endtime},{endtimeMs},{period.ToString(_citectNumberFormat)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = ctApi.Find(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
             
             return ToTrnData(result);
@@ -54,8 +58,7 @@ namespace Citect
         /// <returns></returns>
         public static async Task<IEnumerable<TrnData>> TrnQueryAsync(this CtApi ctApi, long endtime, int endtimeMs, float period, int numSamples, string tagName, uint displayMode, int dataMode, int instantTrend, int samplePeriod, string cluster)
         {
-            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
-            var query = $"TRNQUERY,{endtime},{endtimeMs},{period.ToString(format)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var query = $"TRNQUERY,{endtime},{endtimeMs},{period.ToString(_citectNumberFormat)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = await ctApi.FindAsync(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
 
             return ToTrnData(result);
@@ -77,9 +80,8 @@ namespace Citect
         /// <returns></returns>
         public static IEnumerable<TrnData> TrnQuery(this CtApi ctApi, DateTime endtime, float period, int numSamples, string tagName, uint displayMode, int dataMode, int instantTrend, int samplePeriod, string cluster)
         {
-            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
             var endTimeSeconds = new DateTimeOffset(endtime.ToUniversalTime()).ToUnixTimeSeconds();
-            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(_citectNumberFormat)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = ctApi.Find(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
 
             return ToTrnData(result);
@@ -101,9 +103,8 @@ namespace Citect
         /// <returns></returns>
         public static async Task<IEnumerable<TrnData>> TrnQueryAsync(this CtApi ctApi, DateTime endtime, float period, int numSamples, string tagName, uint displayMode, int dataMode, int instantTrend, int samplePeriod, string cluster)
         {
-            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
             var endTimeSeconds = new DateTimeOffset(endtime.ToUniversalTime()).ToUnixTimeSeconds();
-            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(_citectNumberFormat)},{numSamples},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = await ctApi.FindAsync(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
 
             return ToTrnData(result);
@@ -119,20 +120,17 @@ namespace Citect
         /// <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
         /// <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="DisplayMode"/> to calculate this value.</param>
         /// <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
-        /// <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
-        /// <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
         /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
         /// <returns></returns>
         public static IEnumerable<TrnData> TrnQuery(this CtApi ctApi, DateTime starttime, DateTime endtime, float period, string tagName, uint displayMode, int dataMode, string cluster)
         {
-            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
             var endTimeSeconds = new DateTimeOffset(endtime.ToUniversalTime()).ToUnixTimeSeconds();
             var totalSeconds = endtime.Subtract(starttime).TotalSeconds;
             var numSamples = totalSeconds / period;
             var instantTrend = 0;
             var samplePeriod = 250;
 
-            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{Math.Round(numSamples)},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(_citectNumberFormat)},{Math.Round(numSamples)},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = ctApi.Find(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
 
             return ToTrnData(result);
@@ -148,20 +146,17 @@ namespace Citect
         /// <param name="tagName">The name of the trend tag as a string. This query only supports the retrieval of trend data for one trend at a time.</param>
         /// <param name="displayMode">Specifies the different options for formatting and calculating the samples of the query as an unsigned integer. See <see cref="DisplayMode"/> to calculate this value.</param>
         /// <param name="dataMode">Mode of this request as an integer. 1 if you want the timestamps to be returned with their full precision and accuracy. Mode 1 does not interpolate samples where there were no values. 0 if you want the timestamps to be calculated, one per period. Mode 0 does interpolate samples, where there was no values.</param>
-        /// <param name="instantTrend">An integer specifying whether the query is for an instant trend. 1 if for an instant trend. 0 if not.</param>
-        /// <param name="samplePeriod">An integer specifying the requested sample period in milliseconds for the instant trend's tag value.</param>
         /// <param name="cluster">Specifies on which cluster the Find function will be performed. If left NULL or empty string then the Find will be performed on the active cluster if there is only one.</param>
         /// <returns></returns>
         public static async Task<IEnumerable<TrnData>> TrnQueryAsync(this CtApi ctApi, DateTime starttime, DateTime endtime, float period, string tagName, uint displayMode, int dataMode, string cluster)
         {
-            var format = new NumberFormatInfo { NumberDecimalSeparator = "." };
             var endTimeSeconds = new DateTimeOffset(endtime.ToUniversalTime()).ToUnixTimeSeconds();
             var totalSeconds = endtime.Subtract(starttime).TotalSeconds;
             var numSamples = totalSeconds / period;
             var instantTrend = 0;
             var samplePeriod = 250;
 
-            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(format)},{Math.Round(numSamples)},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
+            var query = $"TRNQUERY,{endTimeSeconds},{endtime.Millisecond},{period.ToString(_citectNumberFormat)},{Math.Round(numSamples)},{tagName},{displayMode},{dataMode},{instantTrend},{samplePeriod}";
             var result = await ctApi.FindAsync(query, null, cluster, new string[] { "DATETIME", "MSECONDS", "VALUE", "QUALITY" });
 
             return ToTrnData(result);
@@ -176,7 +171,7 @@ namespace Citect
         {
             return data.ToList().Select(x =>
             {
-                if (!double.TryParse(x["VALUE"], out var value))
+                if (!double.TryParse(x["VALUE"], NumberStyles.Float, _citectNumberFormat, out var value))
                 {
                     value = double.NaN;
                 }
