@@ -7,7 +7,7 @@
     <PackageProjectUrl>https://github.com/estradege/citect</PackageProjectUrl>
     <Authors>Geoffrey Estrade</Authors>
     <Description>Citect (Plant SCADA) CtApi .NET</Description>
-    <Version>2.2.0</Version>
+    <Version>2.2.1</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <Title>$(AssemblyName)</Title>
