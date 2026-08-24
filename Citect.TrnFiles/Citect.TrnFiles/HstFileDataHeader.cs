@@ -3,9 +3,9 @@
 namespace Citect.TrnFiles
 {
     /// <summary>
-    /// HST Trend File - File Header.
+    /// HST Trend File - Data File Header.
     /// </summary>
-    public class HstFileHeader
+    public class HstFileDataHeader
     {
         /// <summary>
         /// History file name.

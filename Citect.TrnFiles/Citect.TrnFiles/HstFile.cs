@@ -10,13 +10,13 @@ namespace Citect.TrnFiles
         /// <summary>
         /// Master Header.
         /// </summary>
-        public HstMasterHeader Master { get; set; }
-            = new HstMasterHeader();
+        public HstFileMasterHeader Header { get; set; }
+            = new HstFileMasterHeader();
 
         /// <summary>
-        /// Files Header.
+        /// Data Headers.
         /// </summary>
-        public LinkedList<HstFileHeader> Files { get; set; }
-            = new LinkedList<HstFileHeader>();
+        public LinkedList<HstFileDataHeader> Data { get; set; }
+            = new LinkedList<HstFileDataHeader>();
     }
 }

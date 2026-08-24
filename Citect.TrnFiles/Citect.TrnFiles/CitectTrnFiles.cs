@@ -10,9 +10,9 @@ namespace Citect.TrnFiles
     public static class CitectTrnFiles
     {
         /// <summary>
-        /// Read HST Trend File
+        /// Read HST Trend File.
         /// </summary>
-        /// <param name="path">The file to open</param>
+        /// <param name="path">The file to open.</param>
         /// <returns></returns>
         public static HstFile ReadHstFile(string path)
         {
@@ -22,8 +22,8 @@ namespace Citect.TrnFiles
             {
                 using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
                 {
-                    ReadHstMasterHeader(hstFile, reader);
-                    ReadHstFileHeaders(hstFile, reader);
+                    ReadHstFileMasterHeader(hstFile, reader);
+                    ReadHstFileDataHeaders(hstFile, reader);
                 }
             }
 
@@ -31,35 +31,56 @@ namespace Citect.TrnFiles
         }
 
         /// <summary>
-        /// Read Master Header of the HST Trend File
+        /// Read DATA Trend File.
+        /// </summary>
+        /// <param name="path">The file to open.</param>
+        /// <returns></returns>
+        public static DataFile ReadDataFile(string path)
+        {
+            var dataFile = new DataFile();
+
+            using (var stream = File.Open(path, FileMode.Open))
+            {
+                using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
+                {
+                    ReadDataFileHeader(dataFile, reader);
+                    //ReadHstFileHeaders(hstFile, reader);
+                }
+            }
+
+            return dataFile;
+        }
+
+        /// <summary>
+        /// Read HST Trend File : Master Header.
         /// </summary>
         /// <param name="hstFile"></param>
         /// <param name="reader"></param>
-        private static void ReadHstMasterHeader(HstFile hstFile, BinaryReader reader)
+        private static void ReadHstFileMasterHeader(HstFile hstFile, BinaryReader reader)
         {
-            hstFile.Master.Title = reader.ReadString(128);
-            hstFile.Master.Id = reader.ReadString(8);
-            hstFile.Master.Type = reader.ReadInt16();
-            hstFile.Master.Version = (TrnFileVersions)reader.ReadInt16();
+            hstFile.Header.Title = reader.ReadString(128);
+            hstFile.Header.Id = reader.ReadString(8);
+            hstFile.Header.Type = reader.ReadInt16();
+            hstFile.Header.Version = (TrnFileVersions)reader.ReadInt16();
             var alignment1 = reader.ReadString(4);
-            hstFile.Master.Mode = reader.ReadInt32();
-            hstFile.Master.MaxFiles = reader.ReadInt16();
-            hstFile.Master.Files = reader.ReadInt16();
-            hstFile.Master.NextFile = reader.ReadInt16();
-            hstFile.Master.UserFiles = reader.ReadInt16();
+            hstFile.Header.Mode = reader.ReadInt32();
+            hstFile.Header.MaxFiles = reader.ReadInt16();
+            hstFile.Header.Files = reader.ReadInt16();
+            hstFile.Header.NextFile = reader.ReadInt16();
+            hstFile.Header.UserFiles = reader.ReadInt16();
             var alignment2 = reader.ReadString(20);
         }
 
         /// <summary>
-        /// Read File Headers of the HST Trend File
+        /// Read HST Trend File : Data Header.
         /// </summary>
         /// <param name="hstFile"></param>
         /// <param name="reader"></param>
-        private static void ReadHstFileHeaders(HstFile hstFile, BinaryReader reader)
+        private static void ReadHstFileDataHeaders(HstFile hstFile, BinaryReader reader)
         {
-            for (int i = 0; i < hstFile.Master.Files + hstFile.Master.UserFiles; i++)
+            for (int i = 0; i < hstFile.Header.Files + hstFile.Header.UserFiles; i++)
             {
-                switch (hstFile.Master.Version)
+                switch (hstFile.Header.Version)
                 {
                     case TrnFileVersions.TwoByteOriginal:
                         throw new NotImplementedException();
@@ -72,10 +93,10 @@ namespace Citect.TrnFiles
                     case TrnFileVersions.EightByteV531:
                         throw new NotImplementedException();
                     case TrnFileVersions.TwoByteV600:
-                        ReadHstFileHeader5(hstFile, reader);
+                        ReadHstFileDataHeader5(hstFile, reader);
                         break;
                     case TrnFileVersions.EightByteV600:
-                        ReadHstFileHeader6(hstFile, reader);
+                        ReadHstFileDataHeader6(hstFile, reader);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -84,13 +105,13 @@ namespace Citect.TrnFiles
         }
 
         /// <summary>
-        /// Read File Headers of the HST Trend File (<see cref="TrnFileVersions.TwoByteV600"/>)
+        /// RRead HST Trend File : Data Header (<see cref="TrnFileVersions.TwoByteV600"/>).
         /// </summary>
         /// <param name="hstFile"></param>
         /// <param name="reader"></param>
-        private static void ReadHstFileHeader5(HstFile hstFile, BinaryReader reader)
+        private static void ReadHstFileDataHeader5(HstFile hstFile, BinaryReader reader)
         {
-            var hstHeader = hstFile.Files.AddLast(new HstFileHeader());
+            var hstHeader = hstFile.Data.AddLast(new HstFileDataHeader());
             hstHeader.Value.Name = reader.ReadString(144);
             hstHeader.Value.Id = reader.ReadString(8);
             hstHeader.Value.Type = reader.ReadInt16();
@@ -113,13 +134,13 @@ namespace Citect.TrnFiles
         }
 
         /// <summary>
-        /// Read File Headers of the HST Trend File (<see cref="TrnFileVersions.EightByteV600"/>)
+        /// RRead HST Trend File : Data Header (<see cref="TrnFileVersions.EightByteV600"/>).
         /// </summary>
         /// <param name="hstFile"></param>
         /// <param name="reader"></param>
-        private static void ReadHstFileHeader6(HstFile hstFile, BinaryReader reader)
+        private static void ReadHstFileDataHeader6(HstFile hstFile, BinaryReader reader)
         {
-            var hstHeader = hstFile.Files.AddLast(new HstFileHeader());
+            var hstHeader = hstFile.Data.AddLast(new HstFileDataHeader());
             hstHeader.Value.Name = reader.ReadString(272);
             hstHeader.Value.Id = reader.ReadString(8);
             hstHeader.Value.Type = reader.ReadInt16();
@@ -142,8 +163,93 @@ namespace Citect.TrnFiles
             var alignment2 = reader.ReadString(6);
         }
 
+        /// <summary>
+        /// Read DATA Trend File : Header.
+        /// </summary>
+        /// <param name="dataFile"></param>
+        /// <param name="reader"></param>
+        private static void ReadDataFileHeader(DataFile dataFile, BinaryReader reader)
+        {
+            dataFile.Header.Title = reader.ReadString(112);
+            dataFile.Header.RawZero = reader.ReadSingle();
+            dataFile.Header.RawFull = reader.ReadSingle();
+            dataFile.Header.EngZero = reader.ReadSingle();
+            dataFile.Header.EngFull = reader.ReadSingle();
+            dataFile.Header.Id = reader.ReadString(8);
+            dataFile.Header.Type = reader.ReadInt16();
+            dataFile.Header.Version = (TrnFileVersions)reader.ReadInt16();
 
+            switch (dataFile.Header.Version)
+            {
+                case TrnFileVersions.TwoByteOriginal:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoBytePreV500:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoByteV500:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoByteV531:
+                    throw new NotImplementedException();
+                case TrnFileVersions.EightByteV531:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoByteV600:
+                    ReadDataFileHeader5(dataFile, reader);
+                    break;
+                case TrnFileVersions.EightByteV600:
+                    ReadDataFileHeader6(dataFile, reader);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
 
+        /// <summary>
+        ///  Read DATA Trend File : Header (<see cref="TrnFileVersions.TwoByteV600"/>).
+        /// </summary>
+        /// <param name="dataFile"></param>
+        /// <param name="reader"></param>
+        private static void ReadDataFileHeader5(DataFile dataFile, BinaryReader reader)
+        {
+            dataFile.Header.StartEvent = reader.ReadInt32();
+            dataFile.Header.TrnName = reader.ReadString(80);
+            dataFile.Header.Mode = reader.ReadInt32();
+            dataFile.Header.Area = reader.ReadInt16();
+            dataFile.Header.Privilege = reader.ReadInt16();
+            dataFile.Header.TrnType = (TrnTypes)reader.ReadInt16();
+            dataFile.Header.SamplePeriod = reader.ReadInt32();
+            dataFile.Header.Units = reader.ReadString(8);
+            dataFile.Header.Format = reader.ReadInt32();
+            dataFile.Header.StartTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32());
+            dataFile.Header.EndTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32());
+            dataFile.Header.Length = reader.ReadInt32();
+            dataFile.Header.Ptr1 = reader.ReadInt32();
+            dataFile.Header.Ptr2 = reader.ReadInt32();
+            var alignment2 = reader.ReadString(2);
+        }
+
+        /// <summary>
+        ///  Read DATA Trend File : Header (<see cref="TrnFileVersions.EightByteV600"/>).
+        /// </summary>
+        /// <param name="dataFile"></param>
+        /// <param name="reader"></param>
+        private static void ReadDataFileHeader6(DataFile dataFile, BinaryReader reader)
+        {
+            dataFile.Header.StartEvent = reader.ReadInt64();
+            var alignment1 = reader.ReadString(12);
+            dataFile.Header.TrnName = reader.ReadString(80);
+            dataFile.Header.Mode = reader.ReadInt32();
+            dataFile.Header.Area = reader.ReadInt16();
+            dataFile.Header.Privilege = reader.ReadInt16();
+            dataFile.Header.TrnType = (TrnTypes)reader.ReadInt16();
+            dataFile.Header.SamplePeriod = reader.ReadInt32();
+            dataFile.Header.Units = reader.ReadString(8);
+            dataFile.Header.Format = reader.ReadInt32();
+            dataFile.Header.StartTime = DateTimeOffset.FromFileTime(reader.ReadInt64());
+            dataFile.Header.EndTime = DateTimeOffset.FromFileTime(reader.ReadInt64());
+            dataFile.Header.Length = reader.ReadInt32();
+            dataFile.Header.Ptr1 = reader.ReadInt32();
+            dataFile.Header.Ptr2 = reader.ReadInt64();
+            var alignment2 = reader.ReadString(6);
+        }
 
 
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// HST Trend File - Master Header.
     /// </summary>
-    public class HstMasterHeader
+    public class HstFileMasterHeader
     {
         /// <summary>
         /// Title of the file. It contains information, such as file version, type, start time and logging name.

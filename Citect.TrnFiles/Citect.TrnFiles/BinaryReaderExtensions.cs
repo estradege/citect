@@ -18,7 +18,7 @@ namespace Citect.TrnFiles
         public static string ReadString(this BinaryReader reader, int count)
         {
             var s = new string(reader.ReadChars(count));
-            return s.Trim('\0', '\u001a').Trim();
+            return s.Trim('\0', '\u001a').Trim().Replace("\n\r", "\r\n");
         }
     }
 }
