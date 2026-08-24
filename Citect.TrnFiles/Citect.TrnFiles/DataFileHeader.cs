@@ -3,7 +3,7 @@
 namespace Citect.TrnFiles
 {
     /// <summary>
-    /// Data Trend File - Header.
+    /// DATA Trend File - Header.
     /// </summary>
     public class DataFileHeader
     {
@@ -95,13 +95,13 @@ namespace Citect.TrnFiles
         /// <summary>
         /// The earliest time that a sample can have and be placed in this file.
         /// </summary>
-        public DateTimeOffset StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// For Periodic Trends the EndTime is always set to the latest possible sample time that can be put into this file. 
         /// For Event Trends the EndTime is the time of the newest sample stored in the file (one less than the StartTime if there are no samples in the file).
         /// </summary>
-        public DateTimeOffset EndTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         /// <summary>
         /// Shows the number of data items.

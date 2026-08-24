@@ -1,14 +1,29 @@
-﻿namespace Citect.TrnFiles
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Citect.TrnFiles
 {
     /// <summary>
-    /// Data Trend File.
+    /// DATA Trend File.
     /// </summary>
     public class DataFile
     {
         /// <summary>
-        /// Header
+        /// DATA Trend File - Header.
         /// </summary>
         public DataFileHeader Header { get; set; }
             = new DataFileHeader();
+
+        /// <summary>
+        /// DATA Trend File - Samples.
+        /// </summary>
+        public LinkedList<DataFileSample> Samples { get; set; }
+            = new LinkedList<DataFileSample>();
+
+        /// <summary>
+        /// DATA Trend File - Valid Samples.
+        /// </summary>
+        public IEnumerable<DataFileSample> ValidSamples 
+            => Samples.Where(sample => !double.IsNaN(sample.Value));
     }
 }

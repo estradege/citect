@@ -8,13 +8,13 @@ namespace Citect.TrnFiles
     public class HstFile
     {
         /// <summary>
-        /// Master Header.
+        /// HST Trend File - Master Header.
         /// </summary>
         public HstFileMasterHeader Header { get; set; }
             = new HstFileMasterHeader();
 
         /// <summary>
-        /// Data Headers.
+        /// HST Trend File - Data File Headers.
         /// </summary>
         public LinkedList<HstFileDataHeader> Data { get; set; }
             = new LinkedList<HstFileDataHeader>();

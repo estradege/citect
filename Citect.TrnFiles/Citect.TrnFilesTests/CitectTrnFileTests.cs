@@ -208,6 +208,12 @@ Wed Apr  1 02:00:00 2026", dataFile.Header.Title);
             Assert.AreEqual(148714, dataFile.Header.Ptr1);
             Assert.AreEqual(-2, dataFile.Header.Ptr2);
 
+            // Samples
+            Assert.HasCount(535680, dataFile.Samples);
+            Assert.HasCount(146, dataFile.ValidSamples);
+            var sample5 = dataFile.ValidSamples.ElementAt(5);
+            Assert.AreEqual(new DateTime(2026, 4, 9, 14, 21, 5, DateTimeKind.Utc), sample5.Timestamp);
+            Assert.AreEqual(16, sample5.Value);
 
         }
 
@@ -244,7 +250,12 @@ Wed Apr  1 02:00:00 2026", dataFile.Header.Title);
             Assert.AreEqual(148714, dataFile.Header.Ptr1);
             Assert.AreEqual(-2, dataFile.Header.Ptr2);
 
-
+            // Samples
+            Assert.HasCount(535680, dataFile.Samples);
+            Assert.HasCount(146, dataFile.ValidSamples);
+            var sample0 = dataFile.ValidSamples.First();
+            Assert.AreEqual(new DateTime(2026, 4, 9, 14, 20, 40, DateTimeKind.Utc), sample0.Timestamp);
+            Assert.AreEqual(51.1396369934082, sample0.Value);
         }
     }
 }

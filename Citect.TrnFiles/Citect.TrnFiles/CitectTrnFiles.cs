@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -44,12 +45,14 @@ namespace Citect.TrnFiles
                 using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
                 {
                     ReadDataFileHeader(dataFile, reader);
-                    //ReadHstFileHeaders(hstFile, reader);
+                    ReadDataFileSamples(dataFile, reader);
                 }
             }
 
             return dataFile;
         }
+
+        #region HST Trend File
 
         /// <summary>
         /// Read HST Trend File : Master Header.
@@ -125,8 +128,8 @@ namespace Citect.TrnFiles
             hstHeader.Value.SamplePeriod = reader.ReadInt32();
             hstHeader.Value.Units = reader.ReadString(8);
             hstHeader.Value.Format = reader.ReadInt32();
-            hstHeader.Value.StartTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32());
-            hstHeader.Value.EndTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32());
+            hstHeader.Value.StartTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32()).UtcDateTime;
+            hstHeader.Value.EndTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32()).UtcDateTime;
             hstHeader.Value.Length = reader.ReadInt32();
             hstHeader.Value.Ptr1 = reader.ReadInt32();
             hstHeader.Value.Ptr2 = reader.ReadInt32();
@@ -155,13 +158,16 @@ namespace Citect.TrnFiles
             hstHeader.Value.SamplePeriod = reader.ReadInt32();
             hstHeader.Value.Units = reader.ReadString(8);
             hstHeader.Value.Format = reader.ReadInt32();
-            hstHeader.Value.StartTime = DateTimeOffset.FromFileTime(reader.ReadInt64());
-            hstHeader.Value.EndTime = DateTimeOffset.FromFileTime(reader.ReadInt64());
+            hstHeader.Value.StartTime = DateTime.FromFileTime(reader.ReadInt64()).ToUniversalTime();
+            hstHeader.Value.EndTime = DateTime.FromFileTime(reader.ReadInt64()).ToUniversalTime();
             hstHeader.Value.Length = reader.ReadInt32();
             hstHeader.Value.Ptr1 = reader.ReadInt32();
             hstHeader.Value.Ptr2 = reader.ReadInt64();
             var alignment2 = reader.ReadString(6);
         }
+
+        #endregion HST Trend File
+        #region DATA Trend File
 
         /// <summary>
         /// Read DATA Trend File : Header.
@@ -218,8 +224,8 @@ namespace Citect.TrnFiles
             dataFile.Header.SamplePeriod = reader.ReadInt32();
             dataFile.Header.Units = reader.ReadString(8);
             dataFile.Header.Format = reader.ReadInt32();
-            dataFile.Header.StartTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32());
-            dataFile.Header.EndTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32());
+            dataFile.Header.StartTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32()).UtcDateTime;
+            dataFile.Header.EndTime = DateTimeOffset.FromUnixTimeSeconds(reader.ReadInt32()).UtcDateTime;
             dataFile.Header.Length = reader.ReadInt32();
             dataFile.Header.Ptr1 = reader.ReadInt32();
             dataFile.Header.Ptr2 = reader.ReadInt32();
@@ -243,81 +249,81 @@ namespace Citect.TrnFiles
             dataFile.Header.SamplePeriod = reader.ReadInt32();
             dataFile.Header.Units = reader.ReadString(8);
             dataFile.Header.Format = reader.ReadInt32();
-            dataFile.Header.StartTime = DateTimeOffset.FromFileTime(reader.ReadInt64());
-            dataFile.Header.EndTime = DateTimeOffset.FromFileTime(reader.ReadInt64());
+            dataFile.Header.StartTime = DateTime.FromFileTime(reader.ReadInt64()).ToUniversalTime();
+            dataFile.Header.EndTime = DateTime.FromFileTime(reader.ReadInt64()).ToUniversalTime();
             dataFile.Header.Length = reader.ReadInt32();
             dataFile.Header.Ptr1 = reader.ReadInt32();
             dataFile.Header.Ptr2 = reader.ReadInt64();
             var alignment2 = reader.ReadString(6);
         }
 
-
-
-
-
-
-
-        public static void Read()
+        /// <summary>
+        ///  Read DATA Trend File : Samples.
+        /// </summary>
+        /// <param name="dataFile"></param>
+        /// <param name="reader"></param>
+        private static void ReadDataFileSamples(DataFile dataFile, BinaryReader reader)
         {
-            var fileName = "C:\\ProgramData\\AVEVA Plant SCADA 2023 R2\\Data\\DFB\\Trends\\IO_AI_EX_0\\Out\\Out.002";
-
-
-            using (var stream = File.Open(fileName, FileMode.Open))
+            switch (dataFile.Header.Version)
             {
-                using (var reader = new BinaryReader(stream, Encoding.UTF8, false))
-                {
-                    //var title = new string(reader.ReadChars(128));
-                    //var id = new string(reader.ReadChars(8));
-                    //var fileType = reader.ReadInt16();
-                    //var version = reader.ReadInt16();
-                    //var alignment1 = new string(reader.ReadChars(4));
-                    //var mode = reader.ReadInt32();
-                    //var history = reader.ReadInt16();
-                    //var files = reader.ReadInt16();
-                    //var next = reader.ReadInt16();
-                    //var addon = reader.ReadInt16();
-                    //var alignment2 = new string(reader.ReadChars(20));
-
-                    var title = reader.ReadString(112);
-                    var rawZero = reader.ReadSingle();
-                    var rawFull = reader.ReadSingle();
-                    var engZero = reader.ReadSingle();
-                    var engFull = reader.ReadSingle();
-                    var id = reader.ReadString(8);
-                    var fileType = reader.ReadInt16();
-                    var version = reader.ReadInt16();
-                    var startEvNo = reader.ReadInt64();
-                    var alignment1 = reader.ReadString(12);
-                    var logName = reader.ReadString(80);
-                    var mode = reader.ReadInt32();
-                    var area = reader.ReadInt16();
-                    var priv = reader.ReadInt16();
-                    var history = reader.ReadInt16();
-                    var samplePeriod = reader.ReadInt32();
-                    var egu = reader.ReadString(8);
-                    var format = reader.ReadInt32();
-                    var startTime = reader.ReadInt64();
-                    var startTimeUtc = DateTime.FromFileTimeUtc(startTime);
-                    var endTime = reader.ReadInt64();
-                    var endTimeUtc = DateTime.FromFileTimeUtc(endTime);
-                    var dataLength = reader.ReadInt32();
-                    var filePointer = reader.ReadInt32();
-                    var endEvNo = reader.ReadInt64();
-                    var alignment2 = reader.ReadString(6);
-
-                    while (reader.BaseStream.Position < reader.BaseStream.Length)
-                    {
-                        var value = reader.ReadDouble();
-                        //if (double.IsNormal(value))
-                        //{
-                            Console.WriteLine($"{startTimeUtc} - {value}");
-                        //}
-
-                        startTimeUtc = startTimeUtc.AddMilliseconds(samplePeriod);
-                    }
-                }
+                case TrnFileVersions.TwoByteOriginal:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoBytePreV500:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoByteV500:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoByteV531:
+                    throw new NotImplementedException();
+                case TrnFileVersions.EightByteV531:
+                    throw new NotImplementedException();
+                case TrnFileVersions.TwoByteV600:
+                    ReadDataFileSamples5(dataFile, reader);
+                    break;
+                case TrnFileVersions.EightByteV600:
+                    ReadDataFileSamples6(dataFile, reader);
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
-
         }
+
+        /// <summary>
+        ///  Read DATA Trend File : Samples (<see cref="TrnFileVersions.TwoByteV600"/>).
+        /// </summary>
+        /// <param name="dataFile"></param>
+        /// <param name="reader"></param>
+        private static void ReadDataFileSamples5(DataFile dataFile, BinaryReader reader)
+        {
+            var timestamp = dataFile.Header.StartTime;
+            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            {
+                var sample = dataFile.Samples.AddLast(new DataFileSample());
+                sample.Value.Timestamp = timestamp;
+                var value = reader.ReadInt16();
+                sample.Value.Value = value == -32001 ? double.NaN : value;
+
+                timestamp = timestamp.AddMilliseconds(dataFile.Header.SamplePeriod);
+            }
+        }
+
+        /// <summary>
+        ///  Read DATA Trend File : Samples (<see cref="TrnFileVersions.EightByteV600"/>).
+        /// </summary>
+        /// <param name="dataFile"></param>
+        /// <param name="reader"></param>
+        private static void ReadDataFileSamples6(DataFile dataFile, BinaryReader reader)
+        {
+            var timestamp = dataFile.Header.StartTime;
+            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            {
+                var sample = dataFile.Samples.AddLast(new DataFileSample());
+                sample.Value.Timestamp = timestamp;
+                sample.Value.Value = reader.ReadDouble();
+
+                timestamp = timestamp.AddMilliseconds(dataFile.Header.SamplePeriod);
+            }
+        }
+
+        #endregion DATA Trend File
     }
 }
