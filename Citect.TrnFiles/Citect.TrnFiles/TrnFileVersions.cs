@@ -1,6 +1,9 @@
 ﻿namespace Citect.TrnFiles
 {
-    public enum Versions
+    /// <summary>
+    /// Versions number of the trends.
+    /// </summary>
+    public enum TrnFileVersions
     {
         /// <summary>
         /// Before v5.00

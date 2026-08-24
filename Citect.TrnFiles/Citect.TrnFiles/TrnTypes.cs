@@ -1,6 +1,9 @@
 ﻿namespace Citect.TrnFiles
 {
-    public enum HistoryTypes
+    /// <summary>
+    /// Trend Types.
+    /// </summary>
+    public enum TrnTypes
     {
         /// <summary>
         /// Trn_Periodic or Trn_PeriodicEvent

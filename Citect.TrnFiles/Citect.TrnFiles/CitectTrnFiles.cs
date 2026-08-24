@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Citect.TrnFiles
@@ -15,7 +14,7 @@ namespace Citect.TrnFiles
         /// </summary>
         /// <param name="path">The file to open</param>
         /// <returns></returns>
-        public static HstFile ReadHst(string path)
+        public static HstFile ReadHstFile(string path)
         {
             var hstFile = new HstFile();
 
@@ -38,17 +37,17 @@ namespace Citect.TrnFiles
         /// <param name="reader"></param>
         private static void ReadMaster(HstFile hstFile, BinaryReader reader)
         {
-            hstFile.Master.Title = new string(reader.ReadChars(128));
-            hstFile.Master.Id = new string(reader.ReadChars(8)).Trim('\0');
-            hstFile.Master.FileType = reader.ReadInt16();
-            hstFile.Master.Version = (Versions)reader.ReadInt16();
-            var alignment1 = new string(reader.ReadChars(4));
+            hstFile.Master.Title = reader.ReadString(128);
+            hstFile.Master.Id = reader.ReadString(8);
+            hstFile.Master.Type = reader.ReadInt16();
+            hstFile.Master.Version = (TrnFileVersions)reader.ReadInt16();
+            var alignment1 = reader.ReadString(4);
             hstFile.Master.Mode = reader.ReadInt32();
-            hstFile.Master.History = reader.ReadInt16();
+            hstFile.Master.MaxFiles = reader.ReadInt16();
             hstFile.Master.Files = reader.ReadInt16();
             hstFile.Master.NextFile = reader.ReadInt16();
-            hstFile.Master.AddOn = reader.ReadInt16();
-            var alignment2 = new string(reader.ReadChars(20));
+            hstFile.Master.UserFiles = reader.ReadInt16();
+            var alignment2 = reader.ReadString(20);
         }
 
         /// <summary>
@@ -58,24 +57,24 @@ namespace Citect.TrnFiles
         /// <param name="reader"></param>
         private static void ReadHeaders(HstFile hstFile, BinaryReader reader)
         {
-            for (int i = 0; i < hstFile.Master.Files + hstFile.Master.AddOn; i++)
+            for (int i = 0; i < hstFile.Master.Files + hstFile.Master.UserFiles; i++)
             {
                 switch (hstFile.Master.Version)
                 {
-                    case Versions.TwoByteOriginal:
+                    case TrnFileVersions.TwoByteOriginal:
                         throw new NotImplementedException();
-                    case Versions.TwoBytePreV500:
+                    case TrnFileVersions.TwoBytePreV500:
                         throw new NotImplementedException();
-                    case Versions.TwoByteV500:
+                    case TrnFileVersions.TwoByteV500:
                         throw new NotImplementedException();
-                    case Versions.TwoByteV531:
+                    case TrnFileVersions.TwoByteV531:
                         throw new NotImplementedException();
-                    case Versions.EightByteV531:
+                    case TrnFileVersions.EightByteV531:
                         throw new NotImplementedException();
-                    case Versions.TwoByteV600:
+                    case TrnFileVersions.TwoByteV600:
                         ReadHeaderV5(hstFile, reader);
                         break;
-                    case Versions.EightByteV600:
+                    case TrnFileVersions.EightByteV600:
                         ReadHeaderV6(hstFile, reader);
                         break;
                     default:
@@ -100,27 +99,27 @@ namespace Citect.TrnFiles
         /// <param name="reader"></param>
         private static void ReadHeaderV6(HstFile hstFile, BinaryReader reader)
         {
-            var hstHeader = hstFile.Headers.AddLast(new HstHeader());
-            hstHeader.Value.Name = new string(reader.ReadChars(272));
-            hstHeader.Value.Id = new string(reader.ReadChars(8));
-            hstHeader.Value.FileType = reader.ReadInt16();
-            hstHeader.Value.Version = (Versions)reader.ReadInt16();
-            hstHeader.Value.StartEvNo = reader.ReadInt64();
-            var alignment1 = new string(reader.ReadChars(12));
-            hstHeader.Value.LogName = new string(reader.ReadChars(80));
+            var hstHeader = hstFile.Files.AddLast(new HstFileHeader());
+            hstHeader.Value.Name = reader.ReadString(272);
+            hstHeader.Value.Id = reader.ReadString(8);
+            hstHeader.Value.Type = reader.ReadInt16();
+            hstHeader.Value.Version = (TrnFileVersions)reader.ReadInt16();
+            hstHeader.Value.StartEvent = reader.ReadInt64();
+            var alignment1 = reader.ReadString(12);
+            hstHeader.Value.TrnName = reader.ReadString(80);
             hstHeader.Value.Mode = reader.ReadInt32();
             hstHeader.Value.Area = reader.ReadInt16();
-            hstHeader.Value.Priv = reader.ReadInt16();
-            hstHeader.Value.HistoryType = (HistoryTypes)reader.ReadInt16();
+            hstHeader.Value.Privilege = reader.ReadInt16();
+            hstHeader.Value.TrnType = (TrnTypes)reader.ReadInt16();
             hstHeader.Value.SamplePeriod = reader.ReadInt32();
-            hstHeader.Value.Egu = new string(reader.ReadChars(8));
+            hstHeader.Value.Units = reader.ReadString(8);
             hstHeader.Value.Format = reader.ReadInt32();
-            hstHeader.Value.StartTime = reader.ReadInt64();
-            hstHeader.Value.EndTime = reader.ReadInt64();
-            hstHeader.Value.DataLength = reader.ReadInt32();
-            hstHeader.Value.FilePointer = reader.ReadInt32();
-            hstHeader.Value.EndEvNo = reader.ReadInt64();
-            var alignment2 = new string(reader.ReadChars(6));
+            hstHeader.Value.StartTime = DateTime.FromFileTime(reader.ReadInt64()).ToUniversalTime();
+            hstHeader.Value.EndTime = DateTime.FromFileTime(reader.ReadInt64()).ToUniversalTime();
+            hstHeader.Value.Length = reader.ReadInt32();
+            hstHeader.Value.Ptr1 = reader.ReadInt32();
+            hstHeader.Value.Ptr2 = reader.ReadInt64();
+            var alignment2 = reader.ReadString(6);
         }
 
 
@@ -149,23 +148,23 @@ namespace Citect.TrnFiles
                     //var addon = reader.ReadInt16();
                     //var alignment2 = new string(reader.ReadChars(20));
 
-                    var title = new string(reader.ReadChars(112));
+                    var title = reader.ReadString(112);
                     var rawZero = reader.ReadSingle();
                     var rawFull = reader.ReadSingle();
                     var engZero = reader.ReadSingle();
                     var engFull = reader.ReadSingle();
-                    var id = new string(reader.ReadChars(8));
+                    var id = reader.ReadString(8);
                     var fileType = reader.ReadInt16();
                     var version = reader.ReadInt16();
                     var startEvNo = reader.ReadInt64();
-                    var alignment1 = new string(reader.ReadChars(12));
-                    var logName = new string(reader.ReadChars(80));
+                    var alignment1 = reader.ReadString(12);
+                    var logName = reader.ReadString(80);
                     var mode = reader.ReadInt32();
                     var area = reader.ReadInt16();
                     var priv = reader.ReadInt16();
                     var history = reader.ReadInt16();
                     var samplePeriod = reader.ReadInt32();
-                    var egu = new string(reader.ReadChars(8));
+                    var egu = reader.ReadString(8);
                     var format = reader.ReadInt32();
                     var startTime = reader.ReadInt64();
                     var startTimeUtc = DateTime.FromFileTimeUtc(startTime);
@@ -174,7 +173,7 @@ namespace Citect.TrnFiles
                     var dataLength = reader.ReadInt32();
                     var filePointer = reader.ReadInt32();
                     var endEvNo = reader.ReadInt64();
-                    var alignment2 = new string(reader.ReadChars(6));
+                    var alignment2 = reader.ReadString(6);
 
                     while (reader.BaseStream.Position < reader.BaseStream.Length)
                     {

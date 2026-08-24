@@ -1,17 +1,22 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Citect.TrnFiles
 {
     /// <summary>
-    /// HST Trend File
+    /// HST Trend File.
     /// </summary>
     public class HstFile
     {
-        public HstMaster Master { get; set; }
-            = new HstMaster();
+        /// <summary>
+        /// Master Header.
+        /// </summary>
+        public HstMasterHeader Master { get; set; }
+            = new HstMasterHeader();
 
-        public LinkedList<HstHeader> Headers { get; set; }
-            = new LinkedList<HstHeader>();
+        /// <summary>
+        /// Files Header.
+        /// </summary>
+        public LinkedList<HstFileHeader> Files { get; set; }
+            = new LinkedList<HstFileHeader>();
     }
 }

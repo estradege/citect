@@ -1,12 +1,12 @@
 ﻿namespace Citect.TrnFiles
 {
     /// <summary>
-    /// HST Trend File
+    /// HST Trend File - Master Header.
     /// </summary>
-    public class HstMaster
+    public class HstMasterHeader
     {
         /// <summary>
-        /// Title of the file (ASCII). It contains information, such as file version, type, start time and logging name.
+        /// Title of the file. It contains information, such as file version, type, start time and logging name.
         /// </summary>
         public string Title { get; set; }
 
@@ -18,12 +18,12 @@
         /// <summary>
         /// Type of the Citect file. It is set to 0, which is FILE_TYPE_TREND.
         /// </summary>
-        public short FileType { get; set; }
+        public short Type { get; set; }
 
         /// <summary>
-        /// Version number of the trends. (3 or 4 depending on the storage method of the Trend)
+        /// Version number of the trends.
         /// </summary>
-        public Versions Version { get; set; }
+        public TrnFileVersions Version { get; set; }
 
         /// <summary>
         /// Indicates the mode of the MASTER file. (For future use. Currently it is set to 0.)
@@ -31,12 +31,12 @@
         public int Mode { get; set; }
 
         /// <summary>
-        /// Maximum Number of history files to be created. (not including AddOn)
+        /// Number of history files to be created. (not including UserFiles)
         /// </summary>
-        public short History { get; set; }
+        public short MaxFiles { get; set; }
 
         /// <summary>
-        /// Number of history files currently created. (not including AddOn)
+        /// Number of history files currently created. (not including UserFiles)
         /// </summary>
         public short Files { get; set; }
 
@@ -46,8 +46,9 @@
         public short NextFile { get; set; }
 
         /// <summary>
-        /// Shows the number of history files added onto the system through user functions. User can add old (backed up) history files to the system temporarily by using TrnAddHistory() and TrnDelHistory().
+        /// Number of history files added onto the system through user functions.
+        /// User can add old (backed up) history files to the system temporarily by using TrnAddHistory() and TrnDelHistory().
         /// </summary>
-        public short AddOn { get; set; }
+        public short UserFiles { get; set; }
     }
 }
