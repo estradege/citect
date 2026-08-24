@@ -20,6 +20,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="data\E_MOT1_0\IsStarted\IsStarted.000">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\E_MOT1_0\IsStarted\IsStarted.001">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\E_MOT1_0\IsStarted\IsStarted.002">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\E_MOT1_0\IsStarted\IsStarted.HST">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\IO_AI_EX_0\Out\Out.000">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\IO_AI_EX_0\Out\Out.001">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\IO_AI_EX_0\Out\Out.002">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="data\IO_AI_EX_0\Out\Out.HST">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="data\Out.000">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
