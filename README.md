@@ -1,5 +1,5 @@
 # Citect / Plant SCADA
-Toolkit over Citect / Plant SCADA software.
+Toolkit for Citect / Plant SCADA software.
 Install packages from [NuGet](https://www.nuget.org/packages?q=citect.).
 ```
 dotnet add package Citect.CtApi
