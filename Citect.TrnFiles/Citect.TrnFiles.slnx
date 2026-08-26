@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Citect.TrnFiles/Citect.TrnFiles.csproj" />
+  <Project Path="Citect.TrnFilesTests/Citect.TrnFilesTests.csproj" Id="ef3611ca-2b39-490a-aa2c-96f14b6d1e69" />
+</Solution>

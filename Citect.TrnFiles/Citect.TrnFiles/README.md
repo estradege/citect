@@ -1,6 +1,6 @@
-# Citect / Plant SCADA
-Toolkit for Citect / Plant SCADA software.
-Install packages from [NuGet](https://www.nuget.org/packages?q=citect.).
+# Citect
+Toolkit over Citect SCADA software.
+Install packages from [NuGet](https://www.nuget.org/profiles/estradege).
 ```
 dotnet add package Citect.CtApi
 dotnet add package Citect.AlarmDriver
